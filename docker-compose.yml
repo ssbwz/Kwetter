@@ -1,0 +1,56 @@
+version: '1'
+
+services:
+  profile-service:
+    build:
+      context: ./profile_service
+      dockerfile: Dockerfile
+    container_name: profile-service
+    ports:
+      - "8081:8080"
+    
+  profile-service-db:
+    image: postgres
+    container_name: profile-service-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: profileservice
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_profile:/var/lib/postgresql/data
+
+  api-gateway:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+
+  identity-service:
+    build:
+      context: ./identity_service
+      dockerfile: Dockerfile
+    container_name: identity-service
+    ports:
+      - "8082:8080"
+    depends_on:
+      - identity-service-db
+
+  identity-service-db:
+    image: postgres
+    container_name: identity-service-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: identityservice
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_identity:/var/lib/postgresql/data
+
+volumes:
+  pg_identity:
+  pg_profile:
