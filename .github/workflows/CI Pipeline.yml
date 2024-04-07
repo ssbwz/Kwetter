@@ -1,0 +1,55 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: false
+      DOTNET_VERSION: 8.0.x
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Setting up dotnet
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+         dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+      - name: Build identity_service
+        run: |
+          cd identity_service
+          dotnet restore "identity_service.sln"
+          dotnet build
+      
+      - name: Build profile_service
+        run: |
+          cd profile_service
+          dotnet restore "profile_service.sln"
+          dotnet build 
+
+      - name: Build api_gateway
+        run: |
+          cd api_gateway
+          dotnet restore "api_gateway.sln"
+          dotnet build 
+            
+      # Install dependencies and build frontend
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+          
+      - name: Build frontend
+        run: |
+            cd frontend
+            npm install
+            npm run build --if-present
