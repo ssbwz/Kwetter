@@ -29,5 +29,5 @@ jobs:
         run: |
           cd frontend
           npm install
-          npm run
+          npm start
           npx cypress run
