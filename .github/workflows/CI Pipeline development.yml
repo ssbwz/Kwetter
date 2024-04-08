@@ -19,34 +19,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
         
-      - name: Build identity_service
-        run: |
-          cd identity_service
-          dotnet restore "identity_service.sln"
-          dotnet build
-      
-      - name: Build profile_service
-        run: |
-          cd profile_service
-          dotnet restore "profile_service.sln"
-          dotnet build 
 
-      - name: Build api_gateway
-        run: |
-          cd api_gateway
-          dotnet restore "api_gateway.sln"
-          dotnet build 
-            
-          
-      - name: Build frontend
-        run: |
-            cd frontend
-            npm install
-            npm run build --if-present
 
       - name: Analysis identity_service
         run: |
           cd identity_service
+          ${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
           dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="http://localhost:9000"  /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
           dotnet build
           dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
