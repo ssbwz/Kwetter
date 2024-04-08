@@ -21,8 +21,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '${{ env.NODEJS_VERSION }}'
+          
       - name: Setting up the backend
-      - uses: hoverkraft-tech/compose-action@v0.0.0
+        uses: hoverkraft-tech/compose-action@v0.0.0
       
       - name: test ui
         run: |
