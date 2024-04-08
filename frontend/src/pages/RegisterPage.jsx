@@ -95,7 +95,7 @@ function RegisterPage() {
                                     <MDBInput label='Password' id='form3' onChange={e => setPassword(e.target.value)} type='text' />
                                 </div>
 
-                                <Button className='mb-4' onClick={register} size='lg'>Register</Button>
+                                <Button id='registerbtn' className='mb-4' onClick={register} size='lg'>Register</Button>
 
                             </MDBCol>
 

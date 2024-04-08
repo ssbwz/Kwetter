@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/1v/profile/{id}",
+      "DownstreamPathTemplate": "/api/1v/profile/{email}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 5056
         }
       ],
-      "UpstreamPathTemplate": "/profiles/{id}",
+      "UpstreamPathTemplate": "/profiles/{email}",
       "UpstreamHttpMethod": [ "Get" ]
     },
     {
@@ -18,7 +18,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 8082
+          "Port": 5162
         }
       ],
       "UpstreamPathTemplate": "/login",
@@ -30,7 +30,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 8082
+          "Port": 5162
         }
       ],
       "UpstreamPathTemplate": "/register",

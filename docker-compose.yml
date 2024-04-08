@@ -1,5 +1,10 @@
-version: '1'
+version: '2'
 
+
+networks:
+  app-network:
+    driver: bridge
+    
 services:
   profile-service:
     build:
@@ -11,6 +16,8 @@ services:
     depends_on: 
       - profile-service-db
       - messaging-broker
+    networks:
+      - app-network
     
   profile-service-db:
     image: postgres
@@ -23,6 +30,8 @@ services:
       - "5433:5432"
     volumes:
       - pg_profile:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   api-gateway:
     build:
@@ -31,6 +40,8 @@ services:
     container_name: api-gateway
     ports:
       - "8080:8080"
+    networks:
+      - app-network
 
   messaging-broker:
     image: rabbitmq
@@ -41,6 +52,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
+    networks:
+      - app-network
 
   identity-service:
     build:
@@ -52,6 +65,8 @@ services:
     depends_on:
       - identity-service-db
       - messaging-broker
+    networks:
+      - app-network
 
   identity-service-db:
     image: postgres
@@ -64,6 +79,9 @@ services:
       - "5432:5432"
     volumes:
       - pg_identity:/var/lib/postgresql/data
+    networks:
+      - app-network
+
 
 volumes:
   pg_identity:
