@@ -23,7 +23,7 @@ jobs:
           node-version: '${{ env.NODEJS_VERSION }}'
           
       - name: Setting up the backend
-        uses: hoverkraft-tech/compose-action@v0.0.0
+        uses: hoverkraft-tech/compose-action@v2.0.0
       
       - name: test ui
         run: |
