@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       CI: false
       DOTNET_VERSION: 8.0.x
@@ -53,3 +53,17 @@ jobs:
             cd frontend
             npm install
             npm run build --if-present
+
+      - name: Analysis identity_service
+        run: |
+          cd identity_service
+          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="http://localhost:9000"  /d:sonar.login="${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}"
+          dotnet build
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}"
+
+      - name: Analysis profile_service
+        run: |
+          cd profile_service
+          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="http://localhost:9000"  /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
+          dotnet build
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
