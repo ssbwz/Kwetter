@@ -24,7 +24,6 @@ jobs:
       - name: Analysis identity_service
         run: |
           cd identity_service
-          ${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
           dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="http://localhost:9000"  /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
           dotnet build
           dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
