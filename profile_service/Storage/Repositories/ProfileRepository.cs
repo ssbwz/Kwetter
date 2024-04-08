@@ -1,38 +1,41 @@
 ﻿using profile_service.model.Models;
 using profile_service.model.Repositories;
+using profile_service.storage.DbContext;
+
 
 namespace profile_service.storage.Repositories
 {
-    public class ProfileRepository : IProfileRepository
+    public class ProfileRepository(ProfileContext context) : IProfileRepository
     {
-        private List<Profile> _profiles = new List<Profile>() {
-        new Profile(){
-        Id=1,
-        Name= "John",
-        Description= "Desc"
-        },
-        new Profile(){
-        Id=2,
-        Name= "Eduard",
-        Description= "Eduard Desc"
-        },
-        new Profile(){
-        Id=3,
-        Name= "Habibi",
-        Description= "Hbb Desc"
-        }
-        };
-
-        public Task<Profile> GetProfileAsync(int id)
+        public Profile CreateProfile(Profile newProfile)
         {
-            foreach (var profile in _profiles)
+            Profile profile;
+            using (context)
             {
-                if (profile.Id == id)
-                {
-                    return Task.FromResult(profile);
-                }
+               profile = context.Profiles.Add(newProfile).Entity;
+               context.SaveChanges();
             }
-            return null;
+            return profile;
+        }
+
+        public Profile GetProfileByEmail(string email)
+        {
+            using (context)
+            {
+                return context.Profiles.FirstOrDefault(u => u.Email == email);
+            }
+        }
+
+        public void UpdateProfile(Profile updatedProfile)
+        {
+            using (context)
+            {
+                Profile profile = context.Profiles.FirstOrDefault(u => u.Email == updatedProfile.Email);
+                profile.Name = updatedProfile.Name;
+                profile.Bio = updatedProfile.Bio;
+                profile.ProfileImage = updatedProfile.ProfileImage;
+                context.SaveChanges();
+            }
         }
     }
 }

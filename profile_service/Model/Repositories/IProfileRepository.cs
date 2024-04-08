@@ -4,6 +4,8 @@ namespace profile_service.model.Repositories
 {
     public interface IProfileRepository
     {
-        public Task<Profile> GetProfileAsync(int id);
+        public Profile CreateProfile(Profile newProfile);
+        public Profile GetProfileByEmail(string email);
+        void UpdateProfile(Profile updatedProfile);
     }
 }

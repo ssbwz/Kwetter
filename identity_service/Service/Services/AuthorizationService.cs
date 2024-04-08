@@ -34,7 +34,7 @@ namespace Service.Services
 
             var claims = new[]
             {
-            new Claim(ClaimTypes.Email, identity.Email),
+            new Claim("Email", identity.Email),
             new Claim("Role", identity.Role)
             };
 

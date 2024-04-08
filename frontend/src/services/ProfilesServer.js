@@ -1,9 +1,14 @@
 import serverbase from "./Serverbase";
 
-const getUserById = (id) => {
-    return serverbase.get(`profiles/${id}`)
+const getUserByEmail = (email) => {
+    return serverbase.get(`profiles/${email}`)
+}
+
+const updateProfile = (updateProfileRequest) => {
+    return serverbase.put(`profiles`, updateProfileRequest)
 }
 
 export default {
-    getUserById
+    getUserByEmail,
+    updateProfile
 }

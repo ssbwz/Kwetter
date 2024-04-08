@@ -15,23 +15,18 @@ namespace Storage.DbContext.ModelsBuilders
             model.Property(x => x.Id)
                 .IsRequired();
 
-            model.Property(x => x.Email)
-                .IsRequired();
+            model.HasIndex(x => x.Email)
+                .IsUnique();
 
             model.Property(x => x.Password)
                 .IsRequired();
 
             model.Property(x => x.RegisterMethod)
-    .IsRequired();
+                .IsRequired();
 
             model.Property(x => x.Role)
                  .IsRequired();
-
-            model.Property(x => x.CreatedAt)
-                .IsRequired();
-
-            model.Property(x => x.UpdatedAt)
-                .IsRequired();
         }
     }
+
 }

@@ -72,7 +72,7 @@ function LoginPage() {
                         <MDBInput id="formBasicPassword" wrapperClass='mb-4' label='Password' onChange={e => setPassword(e.target.value)} type='password' />
                         <Button id="loginButton" className="mb-4" onClick={login} >Sign in</Button>
                         <div className="text-center">
-                            <a onClick={e=>{navigate("/Register")}}> Create a user</a>
+                            <a style={{cursor:"pointer"}} onClick={e=>{navigate("/Register")}}> Create a user</a>
                         </div>
                     </MDBContainer>
                 </Container>

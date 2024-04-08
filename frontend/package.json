@@ -4,11 +4,14 @@
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.1",
+    "@fortawesome/fontawesome-svg-core": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
+    "jwt-decode": "^4.0.0",
     "mdb-react-ui-kit": "^7.2.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
@@ -41,5 +44,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^13.7.2"
   }
 }

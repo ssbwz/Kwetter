@@ -8,6 +8,9 @@ services:
     container_name: profile-service
     ports:
       - "8081:8080"
+    depends_on: 
+      - profile-service-db
+      - messaging-broker
     
   profile-service-db:
     image: postgres
@@ -29,6 +32,16 @@ services:
     ports:
       - "8080:8080"
 
+  messaging-broker:
+    image: rabbitmq
+    container_name: messaging-broker
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+
   identity-service:
     build:
       context: ./identity_service
@@ -38,6 +51,7 @@ services:
       - "8082:8080"
     depends_on:
       - identity-service-db
+      - messaging-broker
 
   identity-service-db:
     image: postgres

@@ -8,6 +8,7 @@ import { useCookies } from "react-cookie";
 import { useState } from "react";
 
 import NavBar from "./components/NavBar";
+import RegisterPage from './pages/RegisterPage';
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route path="/me" element={<PrivateRoute Component={ProfilePage} />} />
       </Routes>
     </BrowserRouter>

@@ -4,6 +4,7 @@ using Models.Services_Interfaces;
 using Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Models.Storage_Interfaces;
+using Storage.Storages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,9 @@ var config = new ConfigurationBuilder()
 
 builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
 builder.Services.AddTransient<IAuthorizationService, AuthorizationService>();
+builder.Services.AddTransient<IIdentityService, IdentityService>();
+builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
+builder.Services.AddTransient<IMessageBroker, MessageBroker>();
 
 
 builder.Services.AddDbContext<IdentityContext>(options =>

@@ -4,11 +4,22 @@ using profile_service.model.Services;
 
 namespace profile_service.logic.Services
 {
-    public class ProfileService(IProfileRepository _profileRepository) : IProfileService
+    public class ProfileService : IProfileService
     {
-        public Task<Profile> GetProfileAsync(int id)
+        private readonly IProfileRepository _profileRepository;
+        public ProfileService(IProfileRepository profileRepository)
         {
-            return _profileRepository.GetProfileAsync(id);
+            this._profileRepository = profileRepository;
+        }
+
+        public Profile GetProfileByEmail(string email)
+        {
+            return _profileRepository.GetProfileByEmail(email);
+        }
+
+        public void UpdateProfile(Profile profile)
+        {
+            _profileRepository.UpdateProfile(profile);
         }
     }
 }

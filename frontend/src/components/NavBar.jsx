@@ -13,6 +13,7 @@ function NavBar() {
     function logOut(e) {
         e.preventDefault();
         removeCookie('token')
+        navigate("/")
     }
 
     const links = [
@@ -39,6 +40,9 @@ function NavBar() {
                                         </Navbar.Brand >
                                     )
                                 })}
+                                <Navbar.Brand href="/me">
+                                    My profile
+                                </Navbar.Brand >
                             </Nav>
                             <Navbar.Collapse className="justify-content-end">
                                 <Navbar.Toggle />
@@ -72,7 +76,7 @@ function NavBar() {
                             <Navbar.Collapse className="justify-content-end">
                                 <div>
                                     <Nav.Link href="/login">
-                                        <Button variant="primary">log in</Button>
+                                        <Button variant="primary">log in / Register</Button>
                                     </Nav.Link >
                                     <Navbar.Toggle />
                                 </div>

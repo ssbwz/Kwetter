@@ -4,6 +4,7 @@ namespace profile_service.model.Services
 {
     public interface IProfileService
     {
-        Task<Profile> GetProfileAsync(int id);
+        Profile GetProfileByEmail(string email);
+        void UpdateProfile(Profile profile);
     }
 }
