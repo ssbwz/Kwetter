@@ -5,8 +5,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5056
+          "Host": "profile-service",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/profiles/{email}",
@@ -17,8 +17,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5162
+          "Host": "identity-service",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/login",
@@ -29,8 +29,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5162
+          "Host": "identity-service",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/register",
@@ -41,8 +41,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5056
+          "Host": "profile-service",
+          "Port": 8080
         }
       ],
       "UpstreamPathTemplate": "/profiles",

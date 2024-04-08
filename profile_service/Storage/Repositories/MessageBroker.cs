@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using profile_service.model.Models;
 using profile_service.model.Repositories;
@@ -17,14 +18,18 @@ namespace profile_service.storage.Repositories
         private readonly string _queueName;
         private readonly IProfileRepository profileRepository;
         private IServiceProvider serviceProvider;
+        private readonly IServiceScope scope;
 
         public MessageBroker(IServiceProvider service)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" , UserName = "guest", Password = "guest" };
+            this.serviceProvider = service;
+            scope = serviceProvider.CreateScope();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            var factory = new ConnectionFactory() { HostName = configuration["Broker:host"] };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _queueName = "profile-creation-queue";
-            this.serviceProvider = service;
         }
 
 
@@ -40,7 +45,6 @@ namespace profile_service.storage.Repositories
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += (model, ea) =>
             {
-                var scope = serviceProvider.CreateScope();
                 var profileRepository = scope.ServiceProvider.GetRequiredService<IProfileRepository>();
 
                 var body = ea.Body.ToArray();
