@@ -9,8 +9,11 @@ on:
       - staging
 
 jobs:
-  ui-test:
-    runs-on: self-hosted
+
+
+ ui-test:
+    runs-on: ubuntu-latest
+
     env:
       CI: false
     steps:
