@@ -18,6 +18,7 @@ services:
       - messaging-broker
     networks:
       - app-network
+    restart: on-failure
     
   profile-service-db:
     image: postgres
@@ -32,6 +33,7 @@ services:
       - pg_profile:/var/lib/postgresql/data
     networks:
       - app-network
+    restart: always
 
   api-gateway:
     build:
@@ -42,6 +44,7 @@ services:
       - "8080:8080"
     networks:
       - app-network
+    restart: on-failure
 
   messaging-broker:
     image: rabbitmq
@@ -54,6 +57,7 @@ services:
       RABBITMQ_DEFAULT_PASS: "guest"
     networks:
       - app-network
+    restart: always
 
   identity-service:
     build:
@@ -67,6 +71,7 @@ services:
       - messaging-broker
     networks:
       - app-network
+    restart: on-failure
 
   identity-service-db:
     image: postgres
@@ -81,7 +86,20 @@ services:
       - pg_identity:/var/lib/postgresql/data
     networks:
       - app-network
+    restart: always
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - app-network
+    restart: on-failure
 
 volumes:
   pg_identity:
