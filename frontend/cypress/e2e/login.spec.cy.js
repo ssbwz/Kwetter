@@ -1,7 +1,7 @@
 
 describe('Login Functionality', () => {
   it('successfully logs in with valid credentials', () => {
-    cy.visit('http://localhost:3000/logi');
+    cy.visit('http://localhost:3000/login');
     cy.get('#formBasicEmail').type('user@gmail.com');
     cy.get('#formBasicPassword').type('123$User');
     cy.get('#loginButton').click();
