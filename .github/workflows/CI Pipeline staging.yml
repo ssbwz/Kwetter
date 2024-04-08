@@ -89,9 +89,9 @@ jobs:
         with:
           node-version: '${{ env.NODEJS_VERSION }}'
 
+      - name: Wait for 30 seconds
+        run: sleep 30
+
       - name: test ui
         run: |
-          cd frontend
-          npm install
-          npm run
           npx cypress run
