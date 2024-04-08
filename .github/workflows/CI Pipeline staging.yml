@@ -93,5 +93,6 @@ jobs:
       - name: test ui
         run: |
           cd frontend
+          cd cypress
           npm install
           npx cypress run
