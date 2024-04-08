@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       CI: false
       DOTNET_VERSION: 8.0.x
@@ -72,7 +72,7 @@ jobs:
 
 
   ui-test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       CI: false
       NODEJS_VERSION: 17
