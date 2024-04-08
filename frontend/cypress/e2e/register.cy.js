@@ -28,6 +28,15 @@ describe('Register User', () => {
     const email = 'user-test@example.com';
     const password = 'Test123!';
 
+
+    cy.get('#form2').type(email);
+    cy.get('#form3').type(password);
+    cy.get('#registerbtn').click();
+
+    cy.url().should('equal', 'http://localhost:3000/login');
+
+    cy.visit('http://localhost:3000/Register');
+
     cy.get('#form2').type(email);
     cy.get('#form3').type(password);
     cy.get('#registerbtn').click();
