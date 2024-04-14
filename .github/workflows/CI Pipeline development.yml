@@ -1,33 +1,74 @@
-# File: .github/workflows/workflow.yml
 
-name: Run Azure Login with OIDC
-on: [push]
+name: CI Pipeline
 
-permissions:
-      id-token: write
-      contents: read
-jobs: 
-  build-and-deploy:
-    runs-on: ubuntu-latest
+on:
+  push:
+    branches:
+      - development
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      CI: false
     steps:
-      - name: Azure login
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true
-  
-      - name: Azure CLI script
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
-          inlineScript: |
-            az account show
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Build identity_service
+        run: |
+          cd identity_service
+          dotnet restore "identity_service.sln"
+          dotnet build
+      
+      - name: Build profile_service
+        run: |
+          cd profile_service
+          dotnet restore "profile_service.sln"
+          dotnet build 
 
-      - name: Azure PowerShell script
-        uses: azure/powershell@v1
+      - name: Build api_gateway
+        run: |
+          cd api_gateway
+          dotnet restore "api_gateway.sln"
+          dotnet build 
+            
+          
+      - name: Build frontend
+        run: |
+            cd frontend
+            npm install
+            npm run build --if-present
+ 
+  analysis:
+   runs-on: self-hosted
+   steps:
+      - name: Set up Azure Key Vault secrets
+        uses: azure/login@v1
         with:
-          azPSVersion: "latest"
-          inlineScript: |
-            Get-AzContext
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # Authenticate with Azure using service principal credentials
+        
+      - name: Fetch secrets from Azure Key Vault
+        uses: Azure/get-keyvault-secrets@v1.0
+        with:
+          keyvault: "{{secerts.KEY_VAULT}}"        # Specify the name of your Azure Key Vault
+          secrets: |
+            SONAR-IDENTITY-SERVICE-TOKEN
+            SONAR-PROFILE-SERVICE-TOKEN
+            SONAR-HOST
+      - name: Analysis identity_service
+        run: |
+          cd identity_service
+          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet build
+          dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
+
+      - name: Analysis profile_service
+        run: |
+          cd profile_service
+          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login="${{ secrets.SONAR-PROFILE-SERVICE-TOKEN }}"
+          dotnet build
+          dotnet son
