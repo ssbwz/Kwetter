@@ -19,13 +19,14 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }} # Authenticate with Azure using service principal credentials
         
       - name: Fetch secrets from Azure Key Vault
-        uses: Azure/get-keyvault-secrets@v1.0
+        uses: Azure/get-keyvault-secrets@v2
         with:
-          keyvault: "{{secerts.KEY_VAULT}}"        # Specify the name of your Azure Key Vault
-          secrets: |
+         keyvault: ${{ secrets.KEY_VAULT }}
+         secrets: |
             SONAR-IDENTITY-SERVICE-TOKEN
             SONAR-PROFILE-SERVICE-TOKEN
             SONAR-HOST
+            
       - name: Analysis identity_service
         run: |
           cd identity_service
@@ -33,9 +34,4 @@ jobs:
           dotnet build
           dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
 
-      - name: Analysis profile_service
-        run: |
-          cd profile_service
-          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login="${{ secrets.SONAR-PROFILE-SERVICE-TOKEN }}"
-          dotnet build
-          dotnet son
+      
