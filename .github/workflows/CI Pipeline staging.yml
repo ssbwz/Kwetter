@@ -3,7 +3,7 @@ name: CI Pipeline
 on:
   push:
     branches:
-      - staging
+      - main
   pull_request:
     branches:
       - staging
@@ -82,6 +82,13 @@ jobs:
           dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
+
+      - name: Analysis tweet_service
+        run: |
+          cd Tweet_service
+          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
+          dotnet build
+          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
 
  ui-test:
     runs-on: ubuntu-latest
