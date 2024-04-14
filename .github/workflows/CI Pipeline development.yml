@@ -22,16 +22,13 @@ jobs:
         uses: Azure/get-keyvault-secrets@v1
         with:
          keyvault: ${{ secrets.KEY_VAULT }}
-         secrets: |
-            SONAR-IDENTITY-SERVICE-TOKEN
-            SONAR-PROFILE-SERVICE-TOKEN
-            SONAR-HOST
+        id: getSecerts
             
       - name: Analysis identity_service
         run: |
           cd identity_service
-          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="${{  steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
           dotnet build
-          dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet sonarscanner end /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
 
       
