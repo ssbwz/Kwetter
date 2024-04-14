@@ -13,6 +13,15 @@ jobs:
   analysis:
    runs-on: self-hosted
    steps:
+
+      
+      - name: Azure login
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      
       - name: Set up Azure Key Vault secrets
         uses: azure/login@v2
 
@@ -24,8 +33,7 @@ jobs:
           environment: azurecloud
           allow-no-subscriptions: false
           audience: api://AzureADTokenExchange
-          auth-type: SERVICE_PRINCIPAL
-        
+          auth-type: SERVICE_PRINCIPAL        
       - name: Fetch secrets from Azure Key Vault
         uses: Azure/get-keyvault-secrets@v1.0
         with:
