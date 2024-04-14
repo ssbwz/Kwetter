@@ -19,7 +19,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }} # Authenticate with Azure using service principal credentials
         
       - name: Fetch secrets from Azure Key Vault
-        uses: Azure/get-keyvault-secrets@v2
+        uses: Azure/get-keyvault-secrets@v1
         with:
          keyvault: ${{ secrets.KEY_VAULT }}
          secrets: |
