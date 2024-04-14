@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using profile_service.logic.Services;
 using profile_service.model.Repositories;
 using profile_service.model.Services;
 using profile_service.storage.DbContext;
 using profile_service.storage.Repositories;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Security.KeyVault.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +18,17 @@ var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
     .Build();
 
 builder.Services.AddTransient<IProfileRepository, ProfileRepository>();
 builder.Services.AddTransient<IProfileService, ProfileService>();
 
 builder.Services.AddHostedService<MessageBroker>();
+
+var credential = new ClientSecretCredential(config["AzureKeyVault:TenantId"], config["AzureKeyVault:ClientId"], config["AzureKeyVault:ClientSecret"]);
+var client = new SecretClient(new Uri($"https://{config["AzureKeyVault:VaultName"]}.vault.azure.net/"), credential);
+builder.Configuration.AddAzureKeyVault(client, new AzureKeyVaultConfigurationOptions());
 
 builder.Services.AddDbContext<ProfileContext>(options =>
 {

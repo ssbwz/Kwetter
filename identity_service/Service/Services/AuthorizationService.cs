@@ -44,7 +44,7 @@ namespace Service.Services
 
             string generateJwtToken(Claim[] claims)
             {
-                var jwtkey = _configuration["JWTSettings:key"];
+                var jwtkey = _configuration["JWTKey"];
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtkey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

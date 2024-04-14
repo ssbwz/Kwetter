@@ -5,6 +5,10 @@ using Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Models.Storage_Interfaces;
 using Storage.Storages;
+using Azure.Identity;
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Security.KeyVault.Secrets;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,7 @@ var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
+     .AddUserSecrets<Program>()
 .Build();
 
 builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
@@ -25,6 +30,10 @@ builder.Services.AddTransient<IIdentityService, IdentityService>();
 builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
 builder.Services.AddTransient<IMessageBroker, MessageBroker>();
 
+
+var credential = new ClientSecretCredential(config["AzureKeyVault:TenantId"], config["AzureKeyVault:ClientId"], config["AzureKeyVault:ClientSecret"]);
+var client = new SecretClient(new Uri($"https://{config["AzureKeyVault:VaultName"]}.vault.azure.net/"), credential);
+builder.Configuration.AddAzureKeyVault(client, new AzureKeyVaultConfigurationOptions());
 
 builder.Services.AddDbContext<IdentityContext>(options =>
 {
@@ -42,7 +51,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
 
 using (var scope = app.Services.CreateScope())
 {

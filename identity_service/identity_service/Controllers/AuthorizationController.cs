@@ -7,15 +7,8 @@ namespace identity_service.Controllers
 {
     [ApiController]
     [Route("api/1v/auth")]
-    public class AuthorizationController : ControllerBase
+    public class AuthorizationController(IAuthorizationService authorizationService, IConfiguration configuration) : ControllerBase
     {
-        private readonly IAuthorizationService authorizationService;
-
-        public AuthorizationController(IAuthorizationService authorizationService)
-        {
-            this.authorizationService = authorizationService;
-        }
-
         [HttpPost]
         [Route("login")]
         public IActionResult Login([FromBody] LoginRequest req)
