@@ -1,4 +1,3 @@
-
 name: CI Pipeline
 
 on:
@@ -7,22 +6,55 @@ on:
       - main
   pull_request:
     branches:
-      - development
+      - main
 
-jobs: 
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      CI: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Build identity_service
+        run: |
+          cd identity_service
+          dotnet restore "identity_service.sln"
+          dotnet build
+      
+      - name: Build profile_service
+        run: |
+          cd profile_service
+          dotnet restore "profile_service.sln"
+          dotnet build 
+
+      - name: Build api_gateway
+        run: |
+          cd api_gateway
+          dotnet restore "api_gateway.sln"
+          dotnet build 
+            
+          
+      - name: Build frontend
+        run: |
+            cd frontend
+            npm install
+            npm run build --if-present
+ 
   analysis:
    runs-on: self-hosted
    steps:
       - name: Set up Azure Key Vault secrets
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }} # Authenticate with Azure using service principal credentials
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
         
       - name: Fetch secrets from Azure Key Vault
         uses: Azure/get-keyvault-secrets@v1
         with:
          keyvault: ${{ secrets.KEY_VAULT }}
-         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN'
+         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN, SONAR-PROFILE-SERVICE-TOKEN'
         id: getSecerts
             
       - name: Analysis identity_service
@@ -32,4 +64,9 @@ jobs:
           dotnet build
           dotnet sonarscanner end /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
 
-      
+      - name: Analysis profile_service
+        run: |
+          cd profile_service
+          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login="${{ secrets.SONAR-PROFILE-SERVICE-TOKEN }}"
+          dotnet build
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR-PROFILE-SERVICE-TOKEN }}"
