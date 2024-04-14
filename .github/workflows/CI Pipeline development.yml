@@ -9,39 +9,7 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: self-hosted
-    env:
-      CI: false
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Build identity_service
-        run: |
-          cd identity_service
-          dotnet restore "identity_service.sln"
-          dotnet build
-      
-      - name: Build profile_service
-        run: |
-          cd profile_service
-          dotnet restore "profile_service.sln"
-          dotnet build 
 
-      - name: Build api_gateway
-        run: |
-          cd api_gateway
-          dotnet restore "api_gateway.sln"
-          dotnet build 
-            
-          
-      - name: Build frontend
-        run: |
-            cd frontend
-            npm install
-            npm run build --if-present
- 
   analysis:
    runs-on: self-hosted
    needs: build
