@@ -9,6 +9,7 @@ on:
       - development
 permissions:
       id-token: write
+      contents: read
 jobs: 
   analysis:
    runs-on: self-hosted
