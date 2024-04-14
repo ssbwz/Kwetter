@@ -12,7 +12,6 @@ jobs:
 
   analysis:
    runs-on: self-hosted
-   needs: build
    steps:
       - name: Set up Azure Key Vault secrets
         uses: azure/login@v1
