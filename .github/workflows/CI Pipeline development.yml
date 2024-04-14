@@ -26,6 +26,7 @@ jobs:
 
       - name: Analysis tweet_service
         run: |
+          ls
           cd tweet_service
           dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
           dotnet build
