@@ -54,25 +54,34 @@ jobs:
             npm run build --if-present
  
  analysis:
-    runs-on: self-hosted
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+   needs: build
+   runs-on: self-hosted
+   steps:
+      - name: Set up Azure Key Vault secrets
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
         
+      - name: Fetch secrets from Azure Key Vault
+        uses: Azure/get-keyvault-secrets@v1
+        with:
+         keyvault: ${{ secrets.KEY_VAULT }}
+         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN, SONAR-PROFILE-SERVICE-TOKEN'
+        id: getSecerts
+            
       - name: Analysis identity_service
         run: |
           cd identity_service
-          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url="http://localhost:9000"  /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
+          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url=${{  steps.getSecerts.outputs.SONAR-HOST }}  /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
           dotnet build
-          dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
+          dotnet sonarscanner end /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
 
       - name: Analysis profile_service
         run: |
           cd profile_service
-          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="http://localhost:9000"  /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
+          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
           dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
 
  ui-test:
     runs-on: ubuntu-latest
