@@ -90,6 +90,8 @@ jobs:
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
 
+        
+
  ui-test:
     runs-on: ubuntu-latest
 
