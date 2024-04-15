@@ -4,7 +4,7 @@ describe('Login Functionality', () => {
 
     cy.visit('http://localhost:3000/Register');
 
-    const email = 'user@gmail.com';
+    const email = 'user122@gmail.com';
     const password = '123$User';
 
     cy.get('#form2').type(email);
@@ -14,8 +14,8 @@ describe('Login Functionality', () => {
     cy.url().should('equal', 'http://localhost:3000/login');
 
     cy.visit('http://localhost:3000/login');
-    cy.get('#formBasicEmail').type('user@gmail.com');
-    cy.get('#formBasicPassword').type('123$User');
+    cy.get('#formBasicEmail').type(email);
+    cy.get('#formBasicPassword').type(password);
     cy.get('#loginButton').click();
     cy.url().should('equal', 'http://localhost:3000/');
   });
