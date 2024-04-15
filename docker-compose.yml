@@ -120,7 +120,7 @@ services:
 
   tweet-service:
     build:
-      context: ./tweet_service
+      context: ./Tweet_service
       dockerfile: Dockerfile
     container_name: tweet-service
     ports:
