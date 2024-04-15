@@ -1,0 +1,6 @@
+@Tweet_service_HostAddress = http://localhost:5134
+
+GET {{Tweet_service_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

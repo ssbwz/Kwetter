@@ -43,5 +43,25 @@ namespace identity_service.Controllers
                 return StatusCode(500);
             }
         }
+
+
+        [HttpDelete("{email}")]
+        public IActionResult Delete(string email)
+        {
+            try
+            {
+
+                identityService.DeleteIdentity(email.ToLower());
+                return NoContent();
+            }
+            catch (AssetAlreadyExistException)
+            {
+                return BadRequest("The email is already is been used.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

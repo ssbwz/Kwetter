@@ -6,6 +6,20 @@ networks:
     driver: bridge
     
 services:
+  profile-service-2:
+    build:
+      context: ./profile_service
+      dockerfile: Dockerfile
+    container_name: profile-service-2
+    ports:
+      - "8087:8080"
+    depends_on: 
+      - profile-service-db
+      - messaging-broker
+    networks:
+      - app-network
+    restart: on-failure
+
   profile-service:
     build:
       context: ./profile_service
@@ -47,11 +61,13 @@ services:
     restart: on-failure
 
   messaging-broker:
-    image: rabbitmq
+    image: rabbitmq:3-management
     container_name: messaging-broker
     ports:
       - "5672:5672"
       - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
@@ -66,6 +82,20 @@ services:
     container_name: identity-service
     ports:
       - "8082:8080"
+    depends_on:
+      - identity-service-db
+      - messaging-broker
+    networks:
+      - app-network
+    restart: on-failure
+
+  identity-service-2:
+    build:
+      context: ./identity_service
+      dockerfile: Dockerfile
+    container_name: identity-service-2
+    ports:
+      - "8086:8080"
     depends_on:
       - identity-service-db
       - messaging-broker
@@ -88,6 +118,35 @@ services:
       - app-network
     restart: always
 
+  tweet-service:
+    build:
+      context: ./tweet_service
+      dockerfile: Dockerfile
+    container_name: tweet-service
+    ports:
+      - "8083:8080"
+    depends_on:
+      - tweet-service-db
+      - messaging-broker
+    networks:
+      - app-network
+    restart: on-failure
+
+  tweet-service-db:
+    image: postgres
+    container_name: tweet-service-db
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: tweetservice
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg_tweet:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: always
+
   frontend:
     build:
       context: ./frontend
@@ -104,3 +163,5 @@ services:
 volumes:
   pg_identity:
   pg_profile:
+  pg_tweet:
+  rabbitmq_data:

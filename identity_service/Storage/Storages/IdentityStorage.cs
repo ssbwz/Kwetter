@@ -3,17 +3,21 @@ using Models.Exceptions;
 using Models.Identities;
 using Models.Storage_Interfaces;
 using Storage.DbContext;
+using System.Security.Principal;
 
 namespace Storage.Services
 {
     public class IdentityStorage(IdentityContext context) : IIdentityStorage
     {
+        public void DeleteIdentity(Identity identity)
+        {
+            context.Identities.Remove(identity);
+            context.SaveChanges();
+        }
+
         public Identity? GetIdentityByEmail(string email)
         {
-            using (context)
-            {
-                return context.Identities.FirstOrDefault(u => u.Email == email);
-            }
+            return context.Identities.FirstOrDefault(u => u.Email == email);
         }
 
         public Identity SaveIdentity(Identity newIdentity)
@@ -21,11 +25,8 @@ namespace Storage.Services
             try
             {
                 Identity identity;
-                using (context)
-                {
-                    identity = context.Identities.Add(newIdentity).Entity;
-                    context.SaveChanges();
-                }
+                identity = context.Identities.Add(newIdentity).Entity;
+                context.SaveChanges();
                 return identity;
             }
             catch (DbUpdateException ex)

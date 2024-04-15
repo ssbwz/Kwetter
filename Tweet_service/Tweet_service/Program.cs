@@ -1,48 +1,52 @@
-using Storage.Services;
-using Storage.DbContext;
-using Models.Services_Interfaces;
-using Service.Services;
-using Microsoft.EntityFrameworkCore;
-using Models.Storage_Interfaces;
-using Storage.Storages;
-using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
+using Microsoft.EntityFrameworkCore;
+using Tweet_service.message_broker;
+using Tweet_service.model.Repositories;
+using Tweet_service.model.Services;
+using Tweet_service.service;
+using Tweet_service.storage;
+using Tweet_service.storage.DBContext;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
-     .AddUserSecrets<Program>()
-.Build();
+    .AddUserSecrets<Program>()
+    .Build();
 
-builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
-builder.Services.AddTransient<IAuthorizationService, AuthorizationService>();
-builder.Services.AddTransient<IIdentityService, IdentityService>();
-builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
-builder.Services.AddTransient<IMessageBroker, MessageBroker>();
+builder.Services.AddTransient<ITweetRepository, TweetRepository>();
+builder.Services.AddTransient<ITweetService, TweetService>();
 
+builder.Services.AddHostedService<MessageBroker>();
 
 var credential = new ClientSecretCredential(config["AzureKeyVault:TenantId"], config["AzureKeyVault:ClientId"], config["AzureKeyVault:ClientSecret"]);
 var client = new SecretClient(new Uri($"https://{config["AzureKeyVault:VaultName"]}.vault.azure.net/"), credential);
 builder.Configuration.AddAzureKeyVault(client, new AzureKeyVaultConfigurationOptions());
 
-builder.Services.AddDbContext<IdentityContext>(options =>
+builder.Services.AddDbContext<TweetContext>(options =>
 {
     options.UseNpgsql(
         config["ConnectionStrings:url"],
-        x => { x.MigrationsAssembly("identity_service"); });
+        x => { x.MigrationsAssembly("Tweet_service"); });
 });
+
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    await next.Invoke();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -53,15 +57,12 @@ if (app.Environment.IsDevelopment())
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<IdentityContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<TweetContext>();
     dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

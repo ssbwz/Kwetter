@@ -45,8 +45,44 @@
           "Port": 8080
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
       "UpstreamPathTemplate": "/profiles",
       "UpstreamHttpMethod": [ "Put" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/tweet",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tweet-service",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/tweets",
+      "UpstreamHttpMethod": [ "Post" ],
+      "RouteClaimsRequirement": {
+        "Role": [ "User" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/identites/{email}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/identites/{email}",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "RouteClaimsRequirement": {
+        "Role": [ "Admin", "Moderator" ]
+      }
     }
   ]
 }
