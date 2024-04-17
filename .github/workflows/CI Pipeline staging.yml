@@ -112,8 +112,8 @@ jobs:
       - name: Setting up the backend
         uses: hoverkraft-tech/compose-action@v2.0.0
 
-      - name: Wait for 120 seconds
-        run: sleep 120
+      - name: Wait for 50 seconds
+        run: sleep 50
       
       - name: test ui
         run: |
