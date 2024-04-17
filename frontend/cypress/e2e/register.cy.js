@@ -25,7 +25,7 @@ describe('Register User', () => {
 
     cy.visit('http://localhost:3000/Register');
 
-    const email = 'user-test@example.com';
+    const email = 'user-tsest@example.com';
     const password = 'Test123!';
 
 
