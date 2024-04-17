@@ -10,7 +10,7 @@ on:
 
 jobs:
  ui-test:
-    runs-on: ubuntu-lates
+    runs-on: ubuntu-latest
 
     env:
       CI: false
