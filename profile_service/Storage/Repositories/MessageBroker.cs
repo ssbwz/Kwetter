@@ -14,22 +14,52 @@ namespace profile_service.storage.Repositories
 {
     public class MessageBroker : BackgroundService
     {
-        private readonly IConnection _connection;
+        private  IConnection _connection;
         private readonly IModel _channel;
         private readonly string create_profile_queue;
         private readonly string delete_profile_queue;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly ConnectionFactory factory;
+
 
         public MessageBroker(IServiceProvider serviceProvider)
         {
             _serviceScopeFactory = serviceProvider.GetRequiredService<IServiceScopeFactory>();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            var factory = new ConnectionFactory() { HostName = configuration["Broker:host"] };
-            _connection = factory.CreateConnection();
+            factory = new ConnectionFactory() { HostName = configuration["Broker:host"] };
+            connect();
             _channel = _connection.CreateModel();
             create_profile_queue = "profile-creation-queue";
             delete_profile_queue = "profile-delation-queue";
+        }
+
+        private void connect()
+        {
+            int retries = 0;
+            int maxRetries = 5;
+            TimeSpan delay = TimeSpan.FromSeconds(0);
+
+            while (retries < maxRetries)
+            {
+                try
+                {
+                    _connection = factory.CreateConnection();
+                    break;
+                }
+                catch (Exception)
+                {
+                    delay = TimeSpan.FromSeconds(35);
+                    retries++;
+                    Task.Delay(delay).Wait();
+                    Console.WriteLine($" [.] Retry {retries} of {maxRetries}");
+                }
+            }
+
+            if (retries == maxRetries)
+            {
+                throw new Exception("Retry count exceeded");
+            }
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)

@@ -18,10 +18,9 @@ builder.Services.AddSwaggerGen();
 
 var config = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddUserSecrets<Program>()
     .AddEnvironmentVariables()
-     .AddUserSecrets<Program>()
-.Build();
+    .Build();
 
 builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
 builder.Services.AddTransient<IAuthorizationService, AuthorizationService>();

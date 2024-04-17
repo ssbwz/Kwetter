@@ -6,20 +6,6 @@ networks:
     driver: bridge
     
 services:
-  profile-service-2:
-    build:
-      context: ./profile_service
-      dockerfile: Dockerfile
-    container_name: profile-service-2
-    ports:
-      - "8087:8080"
-    depends_on: 
-      - profile-service-db
-      - messaging-broker
-    networks:
-      - app-network
-    restart: on-failure
-
   profile-service:
     build:
       context: ./profile_service
@@ -33,6 +19,8 @@ services:
     networks:
       - app-network
     restart: on-failure
+    env_file:
+      - ./profile_service/profile_service/.env
     
   profile-service-db:
     image: postgres
@@ -59,6 +47,8 @@ services:
     networks:
       - app-network
     restart: on-failure
+    env_file:
+      - ./api_gateway/api_gateway/.env
 
   messaging-broker:
     image: rabbitmq:3-management
@@ -80,22 +70,10 @@ services:
       context: ./identity_service
       dockerfile: Dockerfile
     container_name: identity-service
+    env_file:
+      - ./identity_service/identity_service/.env
     ports:
       - "8082:8080"
-    depends_on:
-      - identity-service-db
-      - messaging-broker
-    networks:
-      - app-network
-    restart: on-failure
-
-  identity-service-2:
-    build:
-      context: ./identity_service
-      dockerfile: Dockerfile
-    container_name: identity-service-2
-    ports:
-      - "8086:8080"
     depends_on:
       - identity-service-db
       - messaging-broker
@@ -131,6 +109,8 @@ services:
     networks:
       - app-network
     restart: on-failure
+    env_file:
+      - ./Tweet_service/Tweet_service/.env
 
   tweet-service-db:
     image: postgres
