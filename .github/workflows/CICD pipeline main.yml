@@ -22,7 +22,7 @@ jobs:
          dotnet-version: 8.x
 
     - name: docker login
-      run: docker login --username `${{secrets.DOCKER_LOGIN}}` --password `${{secrets.DOCKER_PASSWORD}}`
+      run: docker login --username `${{secrets.DOCKER_LOGIN}}` --password '`${{secrets.DOCKER_PASSWORD}}`'
     
     - name: tag services docker images
       run: |
