@@ -9,91 +9,8 @@ on:
       - staging
 
 jobs:
- build:
-    runs-on: ubuntu-latest
-    env:
-      CI: false
-      DOTNET_VERSION: 8.0.x
-      NODEJS_VERSION: 17
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-        
-      - name: Build identity_service
-        run: |
-          cd identity_service
-          dotnet restore "identity_service.sln"
-          dotnet build
-      
-      - name: Build profile_service
-        run: |
-          cd profile_service
-          dotnet restore "profile_service.sln"
-          dotnet build 
-
-      - name: Build api_gateway
-        run: |
-          cd api_gateway
-          dotnet restore "api_gateway.sln"
-          dotnet build 
-            
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '${{ env.NODEJS_VERSION }}'
-
-      - name: Build frontend
-        run: |
-            cd frontend
-            npm install
-            npm run build --if-present
- 
- analysis:
-   needs: build
-   runs-on: self-hosted
-   steps:
-      - name: Set up Azure Key Vault secrets
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-      - name: Fetch secrets from Azure Key Vault
-        uses: Azure/get-keyvault-secrets@v1
-        with:
-         keyvault: ${{ secrets.KEY_VAULT }}
-         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN, SONAR-PROFILE-SERVICE-TOKEN, SONAR-TWEET-SERVICE-TOKEN'
-        id: getSecerts
-            
-      - name: Analysis identity_service
-        run: |
-          cd identity_service
-          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url=${{  steps.getSecerts.outputs.SONAR-HOST }}  /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
-          dotnet build
-          dotnet sonarscanner end /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
-
-      - name: Analysis profile_service
-        run: |
-          cd profile_service
-          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
-          dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
-
-      - name: Tweet profile_service
-        run: |
-          cd Tweet_service
-          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
-          dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
-
-        
-
  ui-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     env:
       CI: false
@@ -110,7 +27,7 @@ jobs:
         uses: hoverkraft-tech/compose-action@v2.0.0
 
       - name: Wait for 30 seconds
-        run: sleep 30
+        run: sleep 50
       
       - name: test ui
         run: |

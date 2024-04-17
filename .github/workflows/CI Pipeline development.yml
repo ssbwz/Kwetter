@@ -28,6 +28,12 @@ jobs:
           cd profile_service
           dotnet restore "profile_service.sln"
           dotnet build 
+          
+      - name: Build tweet_service
+        run: |
+          cd Tweet_service
+          dotnet restore "Tweet_service.sln"
+          dotnet build 
 
       - name: Build api_gateway
         run: |
@@ -55,7 +61,7 @@ jobs:
         uses: Azure/get-keyvault-secrets@v1
         with:
          keyvault: ${{ secrets.KEY_VAULT }}
-         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN, SONAR-PROFILE-SERVICE-TOKEN'
+         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN, SONAR-PROFILE-SERVICE-TOKEN, SONAR-TWEET-SERVICE-TOKEN'
         id: getSecerts
             
       - name: Analysis identity_service
@@ -71,3 +77,10 @@ jobs:
           dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
+
+      - name: Analysis tweet_service
+        run: |
+          cd Tweet_service
+          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
+          dotnet build
+          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
