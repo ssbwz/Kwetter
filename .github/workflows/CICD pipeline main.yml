@@ -50,18 +50,18 @@ jobs:
           docker build -t api-gateway-service:'{{github.sha}}' .
 
     - name: docker login
-      run: docker login --username `${{secerts.DOCKER_LOGIN}}` --password `${{secerts.DOCKER_PASSWORD}}`
+      run: docker login --username `${{secrets.DOCKER_LOGIN}}` --password `${{secrets.DOCKER_PASSWORD}}`
     
     - name: tag services docker images
       run: |
-        docker tag api-gateway-service:'{{github.sha}}' `${{secerts.DOCKER_LOGIN}}`/api-gateway-service:'{{github.sha}}'
-        docker tag tweet-service:'{{github.sha}}' `${{secerts.DOCKER_LOGIN}}`/tweet-service:'{{github.sha}}'
-        docker tag profile-service:'{{github.sha}}' `${{secerts.DOCKER_LOGIN}}`/profile-service:'{{github.sha}}'
-        docker tag identity-service:'{{github.sha}}' `${{secerts.DOCKER_LOGIN}}`/identity-service:'{{github.sha}}'
+        docker tag api-gateway-service:'{{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/api-gateway-service:'{{github.sha}}'
+        docker tag tweet-service:'{{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/tweet-service:'{{github.sha}}'
+        docker tag profile-service:'{{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/profile-service:'{{github.sha}}'
+        docker tag identity-service:'{{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/identity-service:'{{github.sha}}'
 
     - name: tag services docker images
       run: |
-        docker push  `${{secerts.DOCKER_LOGIN}}`/api-gateway-service:'{{github.sha}}'
-        docker push `${{secerts.DOCKER_LOGIN}}`/tweet-service:'{{github.sha}}'
-        docker push `${{secerts.DOCKER_LOGIN}}`/profile-service:'{{github.sha}}'
-        docker push `${{secerts.DOCKER_LOGIN}}`/identity-service:'{{github.sha}}'
+        docker push  `${{secrets.DOCKER_LOGIN}}`/api-gateway-service:'{{github.sha}}'
+        docker push `${{secrets.DOCKER_LOGIN}}`/tweet-service:'{{github.sha}}'
+        docker push `${{secrets.DOCKER_LOGIN}}`/profile-service:'{{github.sha}}'
+        docker push `${{secrets.DOCKER_LOGIN}}`/identity-service:'{{github.sha}}'
