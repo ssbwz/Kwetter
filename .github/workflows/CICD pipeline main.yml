@@ -59,10 +59,10 @@ jobs:
     
     - name: tag services docker images
       run: |
-        docker tag api-gateway-service:'${{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/api-gateway-service:'${{github.sha}}'
-        docker tag tweet-service:'${{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/tweet-service:'${{github.sha}}'
-        docker tag profile-service:'${{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/profile-service:'${{github.sha}}'
-        docker tag identity-service:'${{github.sha}}' `${{secrets.DOCKER_LOGIN}}`/identity-service:'${{github.sha}}'
+        docker tag api-gateway-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/api-gateway-service:'${{github.sha}}'
+        docker tag tweet-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/tweet-service:'${{github.sha}}'
+        docker tag profile-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/profile-service:'${{github.sha}}'
+        docker tag identity-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/identity-service:'${{github.sha}}'
 
     - name: tag services docker images
       run: |
