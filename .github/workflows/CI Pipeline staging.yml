@@ -10,7 +10,7 @@ on:
 
 jobs:
  ui-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     env:
       CI: false
