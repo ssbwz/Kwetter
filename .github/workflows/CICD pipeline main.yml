@@ -49,6 +49,12 @@ jobs:
           dotnet restore "api_gateway.sln"
           dotnet build -c release
           docker build -t api-gateway-service:'${{github.sha}}' .
+          
+    - name: Build frontend
+      run: |
+          cd frontend
+          npm run build
+          docker build -t frontend:'${{github.sha}}' .
 
     - name: docker login
       uses: docker/login-action@v3.1.0
@@ -63,6 +69,7 @@ jobs:
         docker tag tweet-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/tweet-service:'${{github.sha}}'
         docker tag profile-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/profile-service:'${{github.sha}}'
         docker tag identity-service:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/identity-service:'${{github.sha}}'
+        docker tag frontend:'${{github.sha}}' ${{secrets.DOCKER_LOGIN}}/frontend:'${{github.sha}}'
 
     - name: tag services docker images
       run: |
@@ -70,3 +77,4 @@ jobs:
         docker push ${{secrets.DOCKER_LOGIN}}/tweet-service:'${{github.sha}}'
         docker push ${{secrets.DOCKER_LOGIN}}/profile-service:'${{github.sha}}'
         docker push ${{secrets.DOCKER_LOGIN}}/identity-service:'${{github.sha}}'
+        docker push ${{secrets.DOCKER_LOGIN}}/frontend:'${{github.sha}}'
