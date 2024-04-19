@@ -20,52 +20,41 @@ jobs:
       uses: actions/setup-dotnet@v4.0.0
       with:
          dotnet-version: 8.x
-
-    - name: Build identity_service
-      run: |
-          cd identity_service
-          dotnet restore "identity_service.sln"
-          dotnet build -c release
-          docker build -t identity-service:'${{github.sha}}' .
-      
-    - name: Build profile_service
-      run: |
-          cd profile_service
-          dotnet restore "profile_service.sln"
-          dotnet build -c release
-          docker build -t profile-service:'${{github.sha}}' .
-          
-    - name: Build tweet_service
-      run: |
-          cd Tweet_service
-          dotnet restore "Tweet_service.sln"
-          dotnet build -c release
-          docker build -t tweet-service:'${{github.sha}}' .
-
-
-    - name: Build api_gateway
-      run: |
-          cd api_gateway
-          dotnet restore "api_gateway.sln"
-          dotnet build -c release
-          docker build -t api-gateway-service:'${{github.sha}}' .
-          
-    - name: Build frontend
-      run: |
-          cd frontend
-          npm run build
-          docker build -t frontend:'${{github.sha}}' .
-
+         
     - name: docker login
       uses: docker/login-action@v3.1.0
       with:
         username: ${{secrets.DOCKER_LOGIN}}
         password: ${{secrets.DOCKER_PASSWORD}}
-
-    - name: tag services docker images
+        
+    - name: Build and push identity_service image
       run: |
-        docker push ${{secrets.DOCKER_LOGIN}}/api-gateway-service:'${{github.sha}}'
-        docker push ${{secrets.DOCKER_LOGIN}}/tweet-service:'${{github.sha}}'
-        docker push ${{secrets.DOCKER_LOGIN}}/profile-service:'${{github.sha}}'
-        docker push ${{secrets.DOCKER_LOGIN}}/identity-service:'${{github.sha}}'
-        docker push ${{secrets.DOCKER_LOGIN}}/frontend:'${{github.sha}}'
+          cd identity_service
+          docker build -t identity-service .
+          docker push identity-service
+      
+    - name: Build and push profile_service
+      run: |
+          cd profile_service
+          docker build -t profile-service.
+          docker push profile-service
+          
+    - name: Build and push tweet_service image
+      run: |
+          cd Tweet_service
+          docker build -t tweet-service .
+          docker push tweet-service 
+
+
+    - name: Build and push api_gateway image
+      run: |
+          cd api_gateway
+          docker build -t api-gateway-service .
+          docker push api-gateway-service
+          
+    - name: Build and push frontend iamge
+      run: |
+          cd frontend
+          docker build -t frontend .
+          docker push frontend
+        
