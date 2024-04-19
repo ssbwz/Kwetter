@@ -31,18 +31,21 @@ jobs:
       run: |
           cd identity_service
           docker build -t identity-service .
+          docker tag identity-service kwetter/identity-service:latest
           docker push identity-service
       
     - name: Build and push profile_service
       run: |
           cd profile_service
-          docker build -t profile-service.
+          docker build -t profile-service .
+          docker tag profile-service kwetter/profile-service:latest
           docker push profile-service
           
     - name: Build and push tweet_service image
       run: |
           cd Tweet_service
           docker build -t tweet-service .
+          docker tag tweet-service kwetter/tweet-service:latest
           docker push tweet-service 
 
 
@@ -50,11 +53,13 @@ jobs:
       run: |
           cd api_gateway
           docker build -t api-gateway-service .
+          docker tag api-gateway-service kwetter/api-gateway-service:latest
           docker push api-gateway-service
           
     - name: Build and push frontend iamge
       run: |
           cd frontend
           docker build -t frontend .
+          docker tag frontend kwetter/frontend:latest
           docker push frontend
         
