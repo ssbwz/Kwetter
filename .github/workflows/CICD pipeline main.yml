@@ -31,10 +31,10 @@ jobs:
       run: |
           cd identity_service
           docker build -t identity_service .
-          docker tag identity_service sssb4/identity_service:
+          docker tag identity_service sssb4/identity_service
           docker push identity_service
       
-    - name: Build and push profile_service
+    - name: Build and push profile_service image
       run: |
           cd profile_service
           docker build -t profile_service .
