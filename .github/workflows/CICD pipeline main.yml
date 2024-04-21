@@ -30,36 +30,36 @@ jobs:
     - name: Build and push identity_service image
       run: |
           cd identity_service
-          docker build -t identity-service .
-          docker tag identity-service kwetter/identity-service:latest
-          docker push identity-service
+          docker build -t identity_service .
+          docker tag identity_service sssb4/identity_service:
+          docker push identity_service
       
     - name: Build and push profile_service
       run: |
           cd profile_service
-          docker build -t profile-service .
-          docker tag profile-service kwetter/profile-service:latest
-          docker push profile-service
+          docker build -t profile_service .
+          docker tag profile_service sssb4/profile_service
+          docker push profile_service
           
     - name: Build and push tweet_service image
       run: |
           cd Tweet_service
-          docker build -t tweet-service .
-          docker tag tweet-service kwetter/tweet-service:latest
-          docker push tweet-service 
+          docker build -t tweet_service .
+          docker tag tweet_service sssb4/tweet_service
+          docker push tweet_service 
 
 
     - name: Build and push api_gateway image
       run: |
           cd api_gateway
-          docker build -t api-gateway-service .
-          docker tag api-gateway-service kwetter/api-gateway-service:latest
-          docker push api-gateway-service
+          docker build -t api_gateway-service .
+          docker tag api_gateway_service sssb4/api_gateway_service
+          docker push api_gateway_service
           
     - name: Build and push frontend iamge
       run: |
           cd frontend
           docker build -t frontend .
-          docker tag frontend kwetter/frontend:latest
+          docker tag frontend sssb4/frontend
           docker push frontend
         
