@@ -52,7 +52,7 @@ jobs:
     - name: Build and push api_gateway image
       run: |
           cd api_gateway
-          docker build -t api_gateway-service .
+          docker build -t api_gateway_service .
           docker tag api_gateway_service sssb4/api_gateway_service
           docker push sssb4/api_gateway_service
           
