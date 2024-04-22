@@ -1,0 +1,65 @@
+name: CD pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up .NET core SDK
+      uses: actions/setup-dotnet@v4.0.0
+      with:
+         dotnet-version: 8.x
+         
+    - name: docker login
+      uses: docker/login-action@v3.1.0
+      with:
+        username: ${{secrets.DOCKER_LOGIN}}
+        password: ${{secrets.DOCKER_PASSWORD}}
+        
+    - name: Build and push identity_service image
+      run: |
+          cd identity_service
+          docker build -t identity_service .
+          docker tag identity_service sssb4/identity_service
+          docker push sssb4/identity_service
+      
+    - name: Build and push profile_service image
+      run: |
+          cd profile_service
+          docker build -t profile_service .
+          docker tag profile_service sssb4/profile_service
+          docker push sssb4/profile_service
+          
+    - name: Build and push tweet_service image
+      run: |
+          cd Tweet_service
+          docker build -t tweet_service .
+          docker tag tweet_service sssb4/tweet_service
+          docker push sssb4/tweet_service 
+
+
+    - name: Build and push api_gateway image
+      run: |
+          cd api_gateway
+          docker build -t api_gateway_service .
+          docker tag api_gateway_service sssb4/api_gateway_service
+          docker push sssb4/api_gateway_service
+          
+    - name: Build and push frontend iamge
+      run: |
+          cd frontend
+          docker build -t frontend .
+          docker tag frontend sssb4/frontend
+          docker push sssb4/frontend
+        
