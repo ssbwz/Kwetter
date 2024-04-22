@@ -83,6 +83,24 @@
       "RouteClaimsRequirement": {
         "Role": [ "Admin", "Moderator" ]
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/identites/{pageNumber}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/identites/{pageNumber}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RouteClaimsRequirement": {
+        "Role": [ "Admin", "Moderator" ]
+      }
     }
   ]
 }

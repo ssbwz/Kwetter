@@ -35,7 +35,6 @@ function LoginPage() {
                 return;
             }
             identityService.login(credentials).then((res) => {
-debugger;
 
                 setCookie('token', res.data.token, { path: '/', secure: true, maxAge: 60 * 2 });
                 return navigate("/")
