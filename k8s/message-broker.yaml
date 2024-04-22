@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      app: rabbitmq
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management-alpine
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5672
+          env:
+            - name: "RABBITMQ_DEFAULT_USER"
+              value: "guest"
+            - name: "RABBITMQ_DEFAULT_PASS"
+              value: "guest"
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: messaging-broker
+  labels:
+    app: rabbitmq
+spec:
+  type: NodePort
+  ports:
+    - name: client-port
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
+    - name: man-port
+      port: 15672
+      protocol: TCP
+      targetPort: 15672
+  selector:
+    app: rabbitmq
+
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: messaging-broker-secret
+type: Opaque
+data:
+  password: Z3Vlc3QK
+  username: Z3Vlc3QK
+
+
+

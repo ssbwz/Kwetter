@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tweet-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: tweet-service
+  template:
+    metadata:
+      labels:
+        app: tweet-service
+    spec:
+      containers:
+      - name: tweet-service
+        image: sssb4/tweet_service
+        env:
+        - name: AzureKeyVault__VaultName
+          valueFrom:
+            configMapKeyRef:
+              name: tweet-service-config
+              key: azure_vault_name
+        - name: AzureKeyVault__ClientId
+          valueFrom:
+            configMapKeyRef:
+              name: tweet-service-config
+              key: azure_vault_clientid
+        - name: AzureKeyVault__TenantId
+          valueFrom:
+            configMapKeyRef:
+              name: tweet-service-config
+              key: azure_vault_tenantId
+        - name: AzureKeyVault__ClientSecret
+          valueFrom:
+            secretKeyRef:
+              name: tweet-service-secret
+              key: azure_vault_client_secret
+        - name: ConnectionStrings__url
+          valueFrom:
+            secretKeyRef:
+              name: tweet-service-secret
+              key: db_connection_string
+        - name: Broker__host
+          valueFrom:
+            configMapKeyRef:
+              name: tweet-service-config
+              key: broker_host
+        - name: Broker__Password
+          value:  guest
+        - name: Broker__Username
+          value: guest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: tweet-service
+spec:
+  selector:
+    app: tweet-service
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tweet-service-config
+data:
+  azure_vault_name: kwetter-dev-westeu-001
+  azure_vault_clientid: 54e1ce92-fb15-4d78-910d-b7af13cb97d8
+  azure_vault_tenantId: 1b3ddc11-68a8-4637-896f-4c1d2536732c
+  broker_host: messaging-broker
+
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: tweet-service-secret
+type: Opaque
+data:
+  azure_vault_client_secret: ZVZHOFF+SklOTFFNTi1GdH50N2g2VXY1RXNIcDR6YlY1NmNIbWEzWg==
+  db_connection_string: U2VydmVyPXR3ZWV0LXNlcnZpY2UtZGI7UG9ydD01NDMyO0RhdGFiYXNlPXR3ZWV0c2VydmljZTtVc2VybmFtZT1yb290O1Bhc3N3b3JkPXJvb3Q=
+  broker_password: Z3Vlc3QK
+  broker_username: Z3Vlc3QK
+
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hoa-tweet-service
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: tweet-service
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 01
+
+
+

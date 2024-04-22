@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: identity-service
+  template:
+    metadata:
+      labels:
+        app: identity-service
+    spec:
+      containers:
+      - name: identity-service
+        image: sssb4/identity_service
+        env:
+        - name: AzureKeyVault__VaultName
+          valueFrom:
+            configMapKeyRef:
+              name: identity-service-config
+              key: azure_vault_name
+        - name: AzureKeyVault__ClientId
+          valueFrom:
+            configMapKeyRef:
+              name: identity-service-config
+              key: azure_vault_clientid
+        - name: AzureKeyVault__TenantId
+          valueFrom:
+            configMapKeyRef:
+              name: identity-service-config
+              key: azure_vault_tenantId
+        - name: AzureKeyVault__ClientSecret
+          valueFrom:
+            secretKeyRef:
+              name: identity-service-secret
+              key: azure_vault_client_secret
+        - name: JWTKey
+          valueFrom:
+            secretKeyRef:
+              name: identity-service-secret
+              key: jwtkey
+        - name: ConnectionStrings__url
+          valueFrom:
+            secretKeyRef:
+              name: identity-service-secret
+              key: db_connection_string
+        - name: Broker__host
+          valueFrom:
+            configMapKeyRef:
+              name: identity-service-config
+              key: broker_host
+        - name: Broker__Password
+          valueFrom:
+            secretKeyRef:
+              name: identity-service-secret
+              key: broker_password
+        - name: Broker__Username
+          valueFrom:
+            secretKeyRef:
+              name: identity-service-secret
+              key: broker_username
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-service
+spec:
+  selector:
+    app: identity-service
+  ports:
+  - port: 8080
+    targetPort: 8080
+
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: identity-service-config
+data:
+  azure_vault_name: kwetter-dev-westeu-001
+  azure_vault_clientid: 54e1ce92-fb15-4d78-910d-b7af13cb97d8
+  azure_vault_tenantId: 1b3ddc11-68a8-4637-896f-4c1d2536732c
+  broker_host: messaging-broker
+
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: identity-service-secret
+type: Opaque
+data:
+  azure_vault_client_secret: ZVZHOFF+SklOTFFNTi1GdH50N2g2VXY1RXNIcDR6YlY1NmNIbWEzWg==
+  jwtkey: Rm9yVGhlTG92ZU9mVGhlR29kU3RvcmVBbmRMb2FkVGhpc1NlY3VyZWx5
+  db_connection_string: U2VydmVyPWlkZW50aXR5LXNlcnZpY2UtZGI7UG9ydD01NDMyO0RhdGFiYXNlPWlkZW50aXR5c2VydmljZTtVc2VybmFtZT1yb290O1Bhc3N3b3JkPXJvb3Q=
+  broker_password: Z3Vlc3QK
+  broker_username: Z3Vlc3QK
+

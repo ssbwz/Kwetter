@@ -25,9 +25,6 @@ builder.Services.AddTransient<IProfileService, ProfileService>();
 
 builder.Services.AddHostedService<MessageBroker>();
 
-var credential = new ClientSecretCredential(config["AzureKeyVault:TenantId"], config["AzureKeyVault:ClientId"], config["AzureKeyVault:ClientSecret"]);
-var client = new SecretClient(new Uri($"https://{config["AzureKeyVault:VaultName"]}.vault.azure.net/"), credential);
-builder.Configuration.AddAzureKeyVault(client, new AzureKeyVaultConfigurationOptions());
 
 builder.Services.AddDbContext<ProfileContext>(options =>
 {
