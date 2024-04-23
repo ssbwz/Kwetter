@@ -46,7 +46,7 @@ function UsersManagementPage() {
         <Container>
             <MDBTable>
                 <MDBTableHead>
-                    <tr>
+                    <tr id="userheader">
                         <th scope='col'>Id</th>
                         <th scope='col'>Email</th>
                         <th scope='col'>Register Method</th>
@@ -56,7 +56,7 @@ function UsersManagementPage() {
                 </MDBTableHead>
                 <MDBTableBody>
                     {identities.map((item, index) => (
-                        <tr key={index}>
+                        <tr id="userrow" key={index}>
                             <td> {item.id}</td>
                             <td> {item.email}</td>
 

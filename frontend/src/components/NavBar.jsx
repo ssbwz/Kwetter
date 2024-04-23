@@ -27,7 +27,6 @@ function NavBar() {
     
 
     if (cookies.token != undefined) {
-        console.log(IdentitiesServer.getCurrentUserRole())
         
         if((IdentitiesServer.getCurrentUserRole() === "Admin") || (IdentitiesServer.getCurrentUserRole() === "Moderator")){
             return (

@@ -63,7 +63,7 @@
       "UpstreamPathTemplate": "/tweets",
       "UpstreamHttpMethod": [ "Post" ],
       "RouteClaimsRequirement": {
-        "Role": [ "User" ]
+        "Role": [ "User", "Admin", "Moderator" ]
       }
     },
     {

@@ -39,11 +39,22 @@ const getCurrentUserRole = () => {
     return 
 }
 
+
+const isAuthorized = () => {
+
+    var token = document.cookie.split('=')[1]
+    if(token){
+        return true
+    }
+    return false 
+}
+
 export default {
     login,
     register,
     getCurrentUserEmail,
     getAllIdentities,
     getCurrentUserRole,
-    deleteIdentity
+    deleteIdentity,
+    isAuthorized
 }

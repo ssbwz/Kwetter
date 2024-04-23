@@ -14,7 +14,7 @@ describe('Register User', () => {
     cy.get('#form2').type(email);
     cy.get('#form3').type(password);
     cy.get('#registerbtn').click();
-
+    cy.wait(1000)
     cy.url().should('include', 'http://localhost:3000/login');
   });
 
