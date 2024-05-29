@@ -3,9 +3,9 @@ using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using System.Text;
-using Azure.Identity;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using Azure.Security.KeyVault.Secrets;
+using Ocelot.Provider.Kubernetes;
+using Ocelot.Provider.Consul;
+using OpenTelemetry.Trace;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +20,13 @@ var config = new ConfigurationBuilder()
     .Build();
 
 
-builder.Services.AddOcelot(builder.Configuration);
+
+
+
+builder.Services.AddOcelot(builder.Configuration)
+.AddConsul()
+.AddKubernetes();
+
 
 builder.Services.AddCors(options =>
 {
@@ -49,6 +55,17 @@ builder.Services
         };
     });
 
+
+builder.Services.AddOpenTelemetry()
+                    .WithTracing(builder => builder
+                        .AddSource("api_gateway")
+                        .AddAspNetCoreInstrumentation()
+                        .AddZipkinExporter(b =>
+                        {
+                            var zipkinHostName = Environment.GetEnvironmentVariable("ZIPKIN_HOSTNAME") ?? "localhost";
+                            b.Endpoint = new Uri($"http://{zipkinHostName}:9411/api/v2/spans");
+                        }));
+
 var app = builder.Build();
 
 app.UseCors("AllowSpecificOrigins");
@@ -57,7 +74,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 await app.UseOcelot();
-
-
 
 app.Run();

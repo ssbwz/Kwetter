@@ -10,6 +10,15 @@ const register = (registerRequest) => {
     return serverbase.post(`register`, registerRequest)
 }
 
+const getAllIdentities = (getAllIdentitiesRequest) => {
+    return serverbase.get("identites/"+ getAllIdentitiesRequest.pageNumber)
+}
+
+
+const deleteIdentity = (deleteIdentityRequest) => {
+    return serverbase.delete("identites/" + deleteIdentityRequest.email)
+}
+
 const getCurrentUserEmail = () => {
 
     var token = document.cookie.split('=')[1]
@@ -20,9 +29,32 @@ const getCurrentUserEmail = () => {
     return 
 }
 
+const getCurrentUserRole = () => {
+
+    var token = document.cookie.split('=')[1]
+    if(token){
+        return jwtDecode(token).Role
+    }
+    window.location.replace('/login')
+    return 
+}
+
+
+const isAuthorized = () => {
+
+    var token = document.cookie.split('=')[1]
+    if(token){
+        return true
+    }
+    return false 
+}
+
 export default {
     login,
     register,
-    getCurrentUserEmail
-
+    getCurrentUserEmail,
+    getAllIdentities,
+    getCurrentUserRole,
+    deleteIdentity,
+    isAuthorized
 }

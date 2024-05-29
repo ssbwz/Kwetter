@@ -10,7 +10,10 @@
         }
       ],
       "UpstreamPathTemplate": "/profiles/{email}",
-      "UpstreamHttpMethod": [ "Get" ]
+      "UpstreamHttpMethod": [ "Get" ],
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/1v/auth/login",
@@ -22,7 +25,10 @@
         }
       ],
       "UpstreamPathTemplate": "/login",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamHttpMethod": [ "Post" ],
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/1v/identites",
@@ -34,7 +40,16 @@
         }
       ],
       "UpstreamPathTemplate": "/register",
-      "UpstreamHttpMethod": [ "Post" ]
+      "UpstreamHttpMethod": [ "Post" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/1v/profile",
@@ -49,7 +64,16 @@
         "AuthenticationProviderKey": "Bearer"
       },
       "UpstreamPathTemplate": "/profiles",
-      "UpstreamHttpMethod": [ "Put" ]
+      "UpstreamHttpMethod": [ "Put" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 1
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
     },
     {
       "DownstreamPathTemplate": "/api/1v/tweet",
@@ -62,8 +86,17 @@
       ],
       "UpstreamPathTemplate": "/tweets",
       "UpstreamHttpMethod": [ "Post" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "RouteClaimsRequirement": {
-        "Role": [ "User" ]
+        "Role": [ "User", "Admin", "Moderator" ]
       }
     },
     {
@@ -80,9 +113,54 @@
       },
       "UpstreamPathTemplate": "/identites/{email}",
       "UpstreamHttpMethod": [ "Delete" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Admin", "Moderator" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/identites/{pageNumber}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/identites/{pageNumber}",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
       "RouteClaimsRequirement": {
         "Role": [ "Admin", "Moderator" ]
       }
     }
-  ]
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": "OcRequestId",
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "You reached the rate limit.",
+      "HttpStatusCode": 429,
+      "ClientIdHeader": "Test"
+    }
+  }
 }

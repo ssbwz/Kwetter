@@ -98,7 +98,27 @@ metadata:
 type: Opaque
 data:
   azure_vault_client_secret: ZVZHOFF+SklOTFFNTi1GdH50N2g2VXY1RXNIcDR6YlY1NmNIbWEzWg==
-  db_connection_string: U2VydmVyPXByb2ZpbGUtc2VydmljZS1kYjtQb3J0PTU0MzI7RGF0YWJhc2U9cHJvZmlsZXNlcnZpY2U7VXNlcm5hbWU9cm9vdDtQYXNzd29yZD1yb290
+  db_connection_string: U2VydmVyPWMtYy1rd2V0dGVyLWRiLmt2amxvNjVvaGR6anN4LnBvc3RncmVzLmNvc21vcy5henVyZS5jb207RGF0YWJhc2U9Y2l0dXM7UG9ydD01NDMyO1VzZXIgSWQ9Y2l0dXM7UGFzc3dvcmQ9QTZ3aDljdjVXU2ZxUVg5O1NzbCBNb2RlPVJlcXVpcmU7
   broker_password: Z3Vlc3QK
   broker_username: Z3Vlc3QK
 
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hoa-profile-service
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: profile-service-deployment
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70

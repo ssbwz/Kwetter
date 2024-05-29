@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using AutoMapper;
+using Microsoft.Extensions.Configuration;
 using Models.Identities;
 using Models.Services_Interfaces;
 using Models.Storage_Interfaces;
 
 namespace Service.Services
 {
-    public class IdentityService(IIdentityStorage identityStorage, IMessageBroker messageBroker, IConfiguration configuration) : IIdentityService
+    public class IdentityService(IMapper mapper,IIdentityStorage identityStorage, IMessageBroker messageBroker, IConfiguration configuration) : IIdentityService
     {
         public Identity CreateIdentity(Identity newIdentity)
         {
@@ -24,6 +25,13 @@ namespace Service.Services
             messageBroker.SendMessage(identity.Email, configuration["Broker:delete-profile-queue"]);
             messageBroker.SendMessage(identity.Email, configuration["Broker:delete-publisher-queue"]);
             identityStorage.DeleteIdentity(identity);
+        }
+
+        public List<GetIdentityDTO> GetAllIdentity(int pageNumber)
+        {
+            List<Identity> identities = identityStorage.GetAllIdentity(pageNumber);
+            return mapper.Map<List<GetIdentityDTO>>(identities);
+
         }
     }
 }

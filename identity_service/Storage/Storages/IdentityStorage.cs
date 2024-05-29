@@ -15,6 +15,19 @@ namespace Storage.Services
             context.SaveChanges();
         }
 
+        public List<Identity> GetAllIdentity(int pageNumber)
+        {
+            int pagesize = 9;
+            int itemsToSkip = (pageNumber - 1) * pagesize;
+
+            List<Identity> identities = new List<Identity>();
+            identities = context.Identities
+                                           .Skip(itemsToSkip)
+                                           .Take(pagesize)
+                                           .ToList();
+            return identities;
+        }
+
         public Identity? GetIdentityByEmail(string email)
         {
             return context.Identities.FirstOrDefault(u => u.Email == email);

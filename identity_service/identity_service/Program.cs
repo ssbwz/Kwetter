@@ -8,6 +8,7 @@ using Storage.Storages;
 using Azure.Identity;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Security.KeyVault.Secrets;
+using Models.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,9 @@ builder.Services.AddTransient<IAuthorizationService, AuthorizationService>();
 builder.Services.AddTransient<IIdentityService, IdentityService>();
 builder.Services.AddTransient<IIdentityStorage, IdentityStorage>();
 builder.Services.AddTransient<IMessageBroker, MessageBroker>();
+
+builder.Services.AddAutoMapper(typeof(IdentityMapper));
+
 
 
 builder.Services.AddDbContext<IdentityContext>(options =>

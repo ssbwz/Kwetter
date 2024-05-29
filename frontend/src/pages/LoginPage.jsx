@@ -35,10 +35,10 @@ function LoginPage() {
                 return;
             }
             identityService.login(credentials).then((res) => {
-debugger;
 
                 setCookie('token', res.data.token, { path: '/', secure: true, maxAge: 60 * 2 });
-                return navigate("/")
+                window.location.replace('/')
+                return
             }).catch(function (error) {
                 if (error.response) {
 
@@ -73,7 +73,7 @@ debugger;
                         <MDBInput id="formBasicPassword" wrapperClass='mb-4' label='Password' onChange={e => setPassword(e.target.value)} type='password' />
                         <Button id="loginButton" className="mb-4" onClick={login} >Sign in</Button>
                         <div className="text-center">
-                            <a style={{cursor:"pointer"}} onClick={e=>{navigate("/Register")}}> Create a user</a>
+                            <a style={{ cursor: "pointer" }} onClick={e => { navigate("/Register") }}> Create a user</a>
                         </div>
                     </MDBContainer>
                 </Container>

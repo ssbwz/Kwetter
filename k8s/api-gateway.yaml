@@ -42,8 +42,8 @@ spec:
               key: jwtkey
         resources:
           limits:
-            memory: "128Mi"
-            cpu: "500m"
+            memory: "512Mi"
+            cpu: "100m"
         ports:
         - containerPort: 8080
 
@@ -56,6 +56,7 @@ metadata:
 spec:
   selector:
     app: api-gatway-service
+  type: LoadBalancer
   ports:
   - port: 8080
     targetPort: 8080
@@ -84,3 +85,24 @@ type: Opaque
 data:
   azure_vault_client_secret: ZVZHOFF+SklOTFFNTi1GdH50N2g2VXY1RXNIcDR6YlY1NmNIbWEzWg==
   jwtkey: Rm9yVGhlTG92ZU9mVGhlR29kU3RvcmVBbmRMb2FkVGhpc1NlY3VyZWx5
+
+---
+
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hoa-api-gateway-service
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-gatway-service-deployment
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
