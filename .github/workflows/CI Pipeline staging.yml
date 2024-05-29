@@ -97,7 +97,7 @@ jobs:
           node-version: '${{ env.NODEJS_VERSION }}'
         
       - name: Docker compose tests run
-        uses: cloudposse/github-action-docker-compose-test-run@0.2.0
+        run: docker compose up --build -d
         
       - name: Wait for 50 seconds
         run: sleep 50
