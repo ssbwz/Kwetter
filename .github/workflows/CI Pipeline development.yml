@@ -52,6 +52,9 @@ jobs:
    needs: build
    runs-on: self-hosted
    steps:
+      - name: Official SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v2.1.0
+        
       - name: Set up Azure Key Vault secrets
         uses: azure/login@v1
         with:
