@@ -99,10 +99,6 @@ jobs:
       - name: Docker compose tests run
         run: docker compose up --build -d
         
-      - name: Wait for 50 seconds
-        run: sleep 50
-
-      
       - name: test ui
         run: |
           cd frontend
