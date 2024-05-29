@@ -98,6 +98,9 @@ jobs:
 
       - name: Docker compose tests run
         uses: cloudposse/github-action-docker-compose-test-run@0.2.0
+        with:
+          workdir: .
+        
       - name: Wait for 50 seconds
         run: sleep 50
       
