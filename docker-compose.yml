@@ -19,8 +19,11 @@ services:
     networks:
       - app-network
     restart: on-failure
-    env_file:
-      - ./profile_service/profile_service/.env
+    environment:
+      ConnectionStrings__url: "Server=profile-service-db;Port=5432;Database=profileservice;Username=root;Password=root"
+      Broker__host: messaging-broker
+      Broker__Password: guest
+      Broker__Username: guest
     
   profile-service-db:
     image: postgres
@@ -47,8 +50,8 @@ services:
     networks:
       - app-network
     restart: on-failure
-    env_file:
-      - ./api_gateway/api_gateway/.env
+    environment:
+      JWTKey: ForTheLoveOfTheGodStoreAndLoadThisSecurely
 
   messaging-broker:
     image: rabbitmq:3-management
@@ -70,8 +73,6 @@ services:
       context: ./identity_service
       dockerfile: Dockerfile
     container_name: identity-service
-    env_file:
-      - ./identity_service/identity_service/.env
     ports:
       - "8082:8080"
     depends_on:
@@ -80,6 +81,12 @@ services:
     networks:
       - app-network
     restart: on-failure
+    environment:
+      ConnectionStrings__url: "Server=identity-service-db;Port=5432;Database=identityservice;Username=root;Password=root"
+      Broker__host: messaging-broker
+      Broker__Password: guest
+      Broker__Username: guest
+      JWTKey: ForTheLoveOfTheGodStoreAndLoadThisSecurely
 
   identity-service-db:
     image: postgres
@@ -109,8 +116,11 @@ services:
     networks:
       - app-network
     restart: on-failure
-    env_file:
-      - ./Tweet_service/Tweet_service/.env
+    environment:
+      ConnectionStrings__url: "Server=tweet-service-db;Port=5432;Database=tweetservice;Username=root;Password=root"
+      Broker__host: messaging-broker
+      Broker__Password: guest
+      Broker__Username: guest
 
   tweet-service-db:
     image: postgres

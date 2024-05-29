@@ -63,41 +63,29 @@ jobs:
    needs: build
    runs-on: self-hosted
    steps:
-      - name: Set up Azure Key Vault secrets
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
-      - name: Fetch secrets from Azure Key Vault
-        uses: Azure/get-keyvault-secrets@v1
-        with:
-         keyvault: ${{ secrets.KEY_VAULT }}
-         secrets: 'SONAR-HOST, SONAR-IDENTITY-SERVICE-TOKEN, SONAR-PROFILE-SERVICE-TOKEN, SONAR-TWEET-SERVICE-TOKEN'
-        id: getSecerts
-            
       - name: Analysis identity_service
         run: |
           cd identity_service
-          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url=${{  steps.getSecerts.outputs.SONAR-HOST }}  /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url=${{  secrets.SONAR_HOST }}  /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
           dotnet build
-          dotnet sonarscanner end /d:sonar.login=${{ steps.getSecerts.outputs.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
 
       - name: Analysis profile_service
         run: |
           cd profile_service
-          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
+          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ secrets.SONAR_HOST }}"  /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
           dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-PROFILE-SERVICE-TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
 
       - name: Analysis tweet_service
         run: |
           cd Tweet_service
-          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
+          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ secrets.SONAR_HOST }}"  /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
           dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
   ui-test:
-    runs-on: self-hosted
     needs: analysis
+    runs-on: ubuntu-latest
     env:
       CI: false
     steps:
@@ -108,13 +96,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '${{ env.NODEJS_VERSION }}'
-
-      - name: Setting up the backend
-        uses: hoverkraft-tech/compose-action@v2.0.0
-
-      - name: Wait for 50 seconds
-        run: sleep 50
-      
+        
+      - name: Docker compose tests run
+        run: docker compose up --build -d
+        
       - name: test ui
         run: |
           cd frontend
