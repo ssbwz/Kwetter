@@ -50,7 +50,7 @@ services:
     networks:
       - app-network
     restart: on-failure
-  environment:
+    environment:
       JWTKey: ForTheLoveOfTheGodStoreAndLoadThisSecurely
 
   messaging-broker:
