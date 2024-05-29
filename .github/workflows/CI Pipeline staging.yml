@@ -84,6 +84,7 @@ jobs:
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
   ui-test:
+    needs: analysis
     runs-on: ubuntu-latest
     env:
       CI: false
