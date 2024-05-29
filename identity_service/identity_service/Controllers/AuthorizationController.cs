@@ -18,7 +18,11 @@ namespace identity_service.Controllers
                 LoginResponse loginResponse = authorizationService.Login(req);
                 return Ok(loginResponse);
             }
-            catch (AssetNotFoundException)
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (UnAuthorizedException)
             {
                 return Unauthorized();
             }

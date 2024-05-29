@@ -8,5 +8,7 @@ namespace Models.Storage_Interfaces
         List<Identity> GetAllIdentity(int pageNumber);
         Identity? GetIdentityByEmail(string email);
         Identity SaveIdentity(Identity newIdentity);
+
+        Identity Update(Identity identity);
     }
 }

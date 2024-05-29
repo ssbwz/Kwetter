@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿    using Microsoft.AspNetCore.Mvc;
 using Models.Auth;
 using Models.Exceptions;
 using Models.Identities;
@@ -25,9 +25,13 @@ namespace identity_service.Controllers
                 Identity newIdentity = new Identity()
                 {
                     Email = req.Email.ToLower(),
-                    Password = req.Password,
+                    HashedPassword = req.Password,
                     RegisterMethod = "Website",
-                    Role = "User"
+                    Role = "User",
+                    UserLoginAttempt = new UserLoginAttempt()
+                    {
+                        AttemptsCount = 0
+                    }
                 };
 
 

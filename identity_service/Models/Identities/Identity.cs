@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Models.Auth;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.Identities
 {
@@ -7,8 +8,10 @@ namespace Models.Identities
  
         public int Id { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string HashedPassword { get; set; }
+        public string Salt { get; set; }
         public string RegisterMethod { get; set; }
         public string Role { get; set; }
+        public UserLoginAttempt UserLoginAttempt { get; set; }
     }
 }

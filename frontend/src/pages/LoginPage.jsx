@@ -41,7 +41,10 @@ function LoginPage() {
                 return
             }).catch(function (error) {
                 if (error.response) {
-
+                    if (error.response.status === 400) {
+                        setErrorMessage(error.response.data);
+                        return
+                    }
                     if (error.response.status === 401) {
                         setErrorMessage("Please check your credentials");
                         return

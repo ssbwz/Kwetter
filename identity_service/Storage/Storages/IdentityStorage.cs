@@ -30,7 +30,7 @@ namespace Storage.Services
 
         public Identity? GetIdentityByEmail(string email)
         {
-            return context.Identities.FirstOrDefault(u => u.Email == email);
+            return context.Identities.Include(i => i.UserLoginAttempt).FirstOrDefault(u => u.Email == email);
         }
 
         public Identity SaveIdentity(Identity newIdentity)
@@ -46,6 +46,13 @@ namespace Storage.Services
             {
                 throw new AssetAlreadyExistException("The user already exist" ,ex);
             }
+        }
+
+        public Identity Update(Identity identity)
+        {
+            context.Update(identity);
+            context.SaveChanges();
+            return identity;
         }
     }
 }
