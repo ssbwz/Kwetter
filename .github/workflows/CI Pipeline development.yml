@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       CI: false
     steps:
@@ -50,7 +50,7 @@ jobs:
 
   analysis:
    needs: build
-   runs-on: self-hosted
+   runs-on: ubuntu-latest
    steps:
       - name: Official SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v2.1.0
