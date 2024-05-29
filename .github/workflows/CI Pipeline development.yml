@@ -55,20 +55,20 @@ jobs:
       - name: Analysis identity_service
         run: |
           cd identity_service
-          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url=${{  secrets.SONAR-HOST }}  /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet sonarscanner begin /k:"identity_service" /d:sonar.host.url=${{  secrets.SONAR_HOST }}  /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
           dotnet build
-          dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR-IDENTITY-SERVICE-TOKEN }}
+          dotnet sonarscanner end /d:sonar.login=${{ secrets.SONAR_IDENTITY_SERVICE_TOKEN }}
 
       - name: Analysis profile_service
         run: |
           cd profile_service
-          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login="${{ secrets.SONAR-PROFILE-SERVICE-TOKEN }}"
+          dotnet sonarscanner begin /k:"profile_service" /d:sonar.host.url="${{ secrets.SONAR_HOST }}"  /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
           dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR-PROFILE-SERVICE-TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_PROFILE_SERVICE_TOKEN }}"
 
       - name: Analysis tweet_service
         run: |
           cd Tweet_service
-          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ secrets.SONAR-HOST }}"  /d:sonar.login="${{ secrets.SONAR-TWEET-SERVICE-TOKEN }}"
+          dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ secrets.SONAR_HOST }}"  /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
           dotnet build
-          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR-TWEET-SERVICE-TOKEN }}"
+          dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
