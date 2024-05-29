@@ -95,11 +95,16 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '${{ env.NODEJS_VERSION }}'
-
-      - name: Docker compose tests run
-        uses: cloudposse/github-action-docker-compose-test-run@0.2.0
       - name: wow
         run: ls
+
+        
+      - name: wow
+        run: docker compose -h
+        
+      - name: Docker compose tests run
+        uses: cloudposse/github-action-docker-compose-test-run@0.2.0
+
         
       - name: Wait for 50 seconds
         run: sleep 50
