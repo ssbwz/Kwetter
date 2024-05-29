@@ -49,11 +49,10 @@ jobs:
             npm run build --if-present
 
   analysis:
-   needs: build
    runs-on: ubuntu-latest
    steps:
       - name: Official SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v2.1.0
+        uses: SonarSource/sonarcloud-github-action@v2.2.0
         
       - name: Set up Azure Key Vault secrets
         uses: azure/login@v1
