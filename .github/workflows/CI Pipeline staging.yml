@@ -95,8 +95,9 @@ jobs:
           dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ steps.getSecerts.outputs.SONAR-HOST }}"  /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ steps.getSecerts.outputs.SONAR-TWEET-SERVICE-TOKEN }}"
+  
   ui-test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: analysis
     env:
       CI: false
@@ -109,8 +110,8 @@ jobs:
         with:
           node-version: '${{ env.NODEJS_VERSION }}'
 
-      - name: Setting up the backend
-        uses: hoverkraft-tech/compose-action@v2.0.0
+      - name: Docker compose tests run
+        uses: cloudposse/github-action-docker-compose-test-run@0.2.0
 
       - name: Wait for 50 seconds
         run: sleep 50
