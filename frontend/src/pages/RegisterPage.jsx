@@ -20,19 +20,14 @@ function RegisterPage() {
     const [password, setPassword] = useState();
     const [vEmail, setVEmail] = useState();
     const [vPassword, setVPassword] = useState();
+    const [birthdate, setBirthdate] = useState();
+    const [vBirthdate, setVBirthdate] = useState();
     const navigate = useNavigate();
 
 
 
     const register = () => {
         try {
-
-            const reigsterUser = {
-                "password": password,
-                "email": email
-            }
-
-
             if (!validateEmail(email)) {
                 setVEmail("Please enter valid email.")
                 return;
@@ -44,6 +39,18 @@ function RegisterPage() {
             }
             else
                 setVPassword(undefined)
+            if (!birthdate) {
+                setVBirthdate("Please fill birthdate.")
+                return;
+            }
+            else
+                setVBirthdate(undefined)
+
+            const reigsterUser = {
+                "password": password,
+                "email": email,
+                "birthdate": birthdate
+            }
 
             IdentitiesServer.register(reigsterUser)
                 .then(() => {
@@ -94,6 +101,14 @@ function RegisterPage() {
                                     <MDBIcon fas icon="lock me-3" size='lg' />
                                     <MDBInput label='Password' id='form3' onChange={e => setPassword(e.target.value)} type='text' />
                                 </div>
+
+
+                                {vBirthdate}
+                                <div className="d-flex flex-row align-items-center mb-4">
+                                    <MDBIcon fas icon="envelope me-3" size='lg' />
+                                    <MDBInput label='Your birthdate' id='form2' onChange={e => setBirthdate(e.target.value)} type='date' />
+                                </div>
+
 
                                 <Button id='registerbtn' className='mb-4' onClick={register} size='lg'>Register</Button>
 

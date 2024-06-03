@@ -152,6 +152,33 @@
       "RouteClaimsRequirement": {
         "Role": [ "Admin", "Moderator" ]
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/tweet/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tweet-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/tweets/me",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Admin", "Moderator", "User"]
+      }
     }
   ],
   "GlobalConfiguration": {

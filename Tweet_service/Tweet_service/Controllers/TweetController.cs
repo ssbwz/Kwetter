@@ -2,8 +2,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Principal;
 using Tweet_service.model.Entities;
+using Tweet_service.model.Execeptions;
+using Tweet_service.model.GetAll;
 using Tweet_service.model.Services;
 using Tweet_service.Models.CreateATweet;
+using Tweet_service.Models.GetAll;
 
 namespace Tweet_service.Controllers
 {
@@ -17,6 +20,40 @@ namespace Tweet_service.Controllers
         {
             try
             {
+               /* string authorizationHeader = Request.Headers["Authorization"];
+                if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return BadRequest("Invalid or missing Authorization header");
+                }
+                string token = authorizationHeader.Substring("Bearer ".Length).Trim();
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var decodedToken = tokenHandler.ReadJwtToken(token);
+               */
+                Tweet tweet = new Tweet()
+                {
+                    PublisherEmail = "user@gmail.com",//decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value,
+                    TextContent = req.TextContent,
+                    IsEighteenPlus = req.IsEighteenPlus,
+                };
+
+                var res = tweetService.CreateTweet(tweet);
+                return CreatedAtAction(nameof(Create), new { id = res.Id }, res);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("me")]
+        public async Task<IActionResult> GetAll([FromQuery] GetAllUserRequest req)
+        {
+            try
+            {
+                /* 
                 string authorizationHeader = Request.Headers["Authorization"];
                 if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
                 {
@@ -26,17 +63,21 @@ namespace Tweet_service.Controllers
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var decodedToken = tokenHandler.ReadJwtToken(token);
-
-                Tweet tweet = new Tweet()
+                */
+                TweetsFilter tweetFilter = new TweetsFilter()
                 {
-                    PublisherEmail = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value,
-                    TextContent = req.TextContent
+                    Page = req.Page,
+                    UserEmail = "user@gmail.com",// decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value
                 };
 
-                var res = tweetService.CreateTweet(tweet);
-                return CreatedAtAction(nameof(Create), new { id = res.Id }, res);
+                GetAllUserResponse res = await tweetService.GetMyTweets(tweetFilter);
+                return Ok(res);
             }
-            catch (Exception)
+            catch (BrokerException)
+            {
+                return StatusCode(500,"Please try again.");
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500);
             }

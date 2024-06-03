@@ -20,6 +20,9 @@ namespace Storage.DbContext.ModelsBuilders
             model.HasIndex(x => x.Email)
                 .IsUnique();
 
+            model.Property(x => x.Birthdate)
+                .IsRequired();
+
             model.Property(x => x.HashedPassword)
                 .IsRequired();
 

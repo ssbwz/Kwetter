@@ -3,7 +3,7 @@ import {
     MDBCol,
     MDBCard,
     MDBCardBody,
-    MDBInput,
+    MDBCheckbox ,
     MDBTextArea
 }
     from 'mdb-react-ui-kit';
@@ -16,6 +16,7 @@ function TweetComponent() {
 
     const [tweetText, setTweetText] = useState('');
     const [vTweetText, setVTweetText] = useState('');
+    const [isEighteenPlus, setIsEighteenPlus] = useState(false);
 
     async function shareTweet(e) {
         e.preventDefault()
@@ -24,11 +25,15 @@ function TweetComponent() {
             setVTweetText("Please fill the fields.")
             return
         }
+        debugger;
         const shareTweetRequest = {
             textContent: tweetText,
+            isEighteenPlus: isEighteenPlus
         }
         await tweetService.shareTweet(shareTweetRequest)
 
+        setIsEighteenPlus(false)
+        setTweetText('')
         setVTweetText("Tweet shared.")
         setTimeout(() => {
             setVTweetText("")
@@ -41,6 +46,7 @@ function TweetComponent() {
                     <MDBCol >
                         {vTweetText}
                         <MDBTextArea label="Tweet" id="tweetform" onChange={e => setTweetText(e.target.value)} value={tweetText} rows="{4}" maxLength={140} />
+                        <MDBCheckbox name='flexCheck'  onClick={e => setIsEighteenPlus(!isEighteenPlus)} checked={isEighteenPlus} id='flexCheckDefault' label='Is this 18+ content?'  />
                     </MDBCol>
 
                     <MDBCol className="">

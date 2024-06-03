@@ -16,6 +16,10 @@ namespace Tweet_service.storage.DBContext.ModelBuilders
             model.Property(x => x.PublisherEmail)
                 .IsRequired();
 
+
+            model.Property(x => x.IsEighteenPlus)
+                .IsRequired();
+
             model.Property(x => x.TextContent)
                 .HasMaxLength(150)
                 .IsRequired();

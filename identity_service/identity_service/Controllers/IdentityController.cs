@@ -26,6 +26,7 @@ namespace identity_service.Controllers
                 {
                     Email = req.Email.ToLower(),
                     HashedPassword = req.Password,
+                    Birthdate = req.Birthdate,
                     RegisterMethod = "Website",
                     Role = "User",
                     UserLoginAttempt = new UserLoginAttempt()

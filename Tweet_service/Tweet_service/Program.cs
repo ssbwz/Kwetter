@@ -25,7 +25,7 @@ var config = new ConfigurationBuilder()
 builder.Services.AddTransient<ITweetRepository, TweetRepository>();
 builder.Services.AddTransient<ITweetService, TweetService>();
 
-builder.Services.AddHostedService<MessageBroker>();
+builder.Services.AddHostedService<RPCServer>();
 
 builder.Services.AddDbContext<TweetContext>(options =>
 {

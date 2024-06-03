@@ -12,6 +12,7 @@ namespace Models.Identities
         public string Salt { get; set; }
         public string RegisterMethod { get; set; }
         public string Role { get; set; }
+        public DateOnly Birthdate { get; set; }
         public UserLoginAttempt UserLoginAttempt { get; set; }
     }
 }

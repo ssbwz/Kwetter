@@ -5,9 +5,6 @@ using Service.Services;
 using Microsoft.EntityFrameworkCore;
 using Models.Storage_Interfaces;
 using Storage.Storages;
-using Azure.Identity;
-using Azure.Extensions.AspNetCore.Configuration.Secrets;
-using Azure.Security.KeyVault.Secrets;
 using Models.Mappers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +28,7 @@ builder.Services.AddTransient<IMessageBroker, MessageBroker>();
 
 builder.Services.AddAutoMapper(typeof(IdentityMapper));
 
+builder.Services.AddHostedService<RPCServer>();
 
 
 builder.Services.AddDbContext<IdentityContext>(options =>

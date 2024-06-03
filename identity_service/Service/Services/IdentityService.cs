@@ -33,6 +33,11 @@ namespace Service.Services
             identityStorage.DeleteIdentity(identity);
         }
 
+        public Identity GetIdentity(string email)
+        {
+            return identityStorage.GetIdentityByEmail(email);
+        }
+
         public List<GetIdentityDTO> GetAllIdentity(int pageNumber)
         {
             List<Identity> identities = identityStorage.GetAllIdentity(pageNumber);
