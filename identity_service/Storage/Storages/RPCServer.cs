@@ -105,6 +105,12 @@ namespace Storage.Storages
 
                             response = JsonConvert.SerializeObject(getUserBrokerResponse);
                             break;
+                        case "update_identity":
+                            var updateIdentityBrokerRequest = JsonConvert.DeserializeObject<UpdateIdentityBrokerRequest>(JsonConvert.SerializeObject(brokerMessage.Load));
+                            Identity updateIdentity = identityService.GetIdentity(updateIdentityBrokerRequest.Email);
+                            updateIdentity.Birthdate = updateIdentityBrokerRequest.Birthdate;
+                            updateIdentity = identityService.Update(updateIdentity);
+                            break;
                         default: break;
                     }
                 }

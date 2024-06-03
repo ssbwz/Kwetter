@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import profilesServer from "../services/ProfilesServer"
 import IdentitiesServer from "../services/IdentitiesServer";
+import Container from 'react-bootstrap/Container';
 
 import {
     MDBRow,
@@ -8,23 +9,29 @@ import {
     MDBCard,
     MDBCardBody,
     MDBContainer,
-    MDBInput
+    MDBInput,
+    MDBIcon
 }
     from 'mdb-react-ui-kit';
 import { Button } from 'react-bootstrap';
 
 function ProfilePage() {
     const [profile, setProfile] = useState()
+    const [identity, setIdentity] = useState()
     const [editMode, setEditMode] = useState(false)
     const [name, setName] = useState()
     const [bio, setBio] = useState()
     const [vName, setVName] = useState();
+    const [birthdate, setBirthdate] = useState();
+    const [vBirthdate, setVBirthdate] = useState();
 
     useEffect(() => {
-        profilesServer.getUserByEmail(IdentitiesServer.getCurrentUserEmail()).then((res) => {
-            setProfile(res.data)
-            setName(res.data.name)
-            setBio(res.data.bio)
+        profilesServer.getCurrentProfile().then((res) => {
+            setProfile(res.data.profile)
+            setIdentity(res.data.identity)
+            setBirthdate(res.data.identity.birthdate)
+            setName(res.data.profile.name)
+            setBio(res.data.profile.bio)
         }).catch((err) => {
             console.log(err.stack)
         })
@@ -35,9 +42,10 @@ function ProfilePage() {
             e.preventDefault()
 
             const updateProfileRequest = {
-                "name": name,
-                "bio": bio,
-                "ProfileImage": ""
+                name: name,
+                bio: bio,
+                ProfileImage: "",
+                birthdate: birthdate
             }
 
             if (!name) {
@@ -45,12 +53,23 @@ function ProfilePage() {
                 return;
             } else
                 setVName(undefined)
+            if (!birthdate) {
+                setVBirthdate("Please fill birthdate.")
+                return;
+            }
+            else
+                setVBirthdate(undefined)
 
             await profilesServer.updateProfile(updateProfileRequest);
-            var res = await profilesServer.getUserByEmail(IdentitiesServer.getCurrentUserEmail())
-            setProfile(res.data)
-            setName(res.data.name)
-            setBio(res.data.bio)
+            profilesServer.getCurrentProfile().then((res) => {
+                setProfile(res.data.profile)
+                setIdentity(res.data.identity)
+                setBirthdate(res.data.identity.birthdate)
+                setName(res.data.profile.name)
+                setBio(res.data.profile.bio)
+            }).catch((err) => {
+                console.log(err.stack)
+            })
             setEditMode(false);
         }
         catch (error) {
@@ -64,7 +83,7 @@ function ProfilePage() {
     } else {
 
         if (editMode) {
-            return <> <MDBContainer fluid>
+            return <> <Container fluid>
 
                 <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
                     <MDBCardBody>
@@ -77,6 +96,13 @@ function ProfilePage() {
                             <MDBCol >
                                 <MDBInput label='Bio' id='form3' onChange={e => setBio(e.target.value)} value={bio} type='text' />
                             </MDBCol>
+
+
+                            {vBirthdate}
+                            <MDBCol >
+                                <MDBInput label='Your birthdate' id='form2'  value={birthdate} onChange={e => setBirthdate(e.target.value)} type='date' />
+                            </MDBCol>
+
                             <MDBCol className="d-flex justify-content-center">
                                 <Button onClick={e => updateProfile(e)} size='lg'>Save</Button>
                             </MDBCol>
@@ -84,11 +110,11 @@ function ProfilePage() {
                     </MDBCardBody>
                 </MDBCard>
 
-            </MDBContainer>
+            </Container>
             </>
         } else
             return <>
-                <MDBContainer fluid>
+                <Container fluid>
 
                     <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
                         <MDBCardBody>
@@ -110,7 +136,20 @@ function ProfilePage() {
                         </MDBCardBody>
                     </MDBCard>
 
-                </MDBContainer>
+
+                    <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
+                        <MDBCardBody>
+                            Personal details
+                            <MDBRow >
+
+                                <MDBCol>
+                                    Birthdate: {identity.birthdate}
+                                </MDBCol>
+                            </MDBRow>
+                        </MDBCardBody>
+                    </MDBCard>
+
+                </Container>
             </>
     }
 }

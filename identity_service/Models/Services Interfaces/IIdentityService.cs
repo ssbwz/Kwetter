@@ -9,5 +9,6 @@ namespace Models.Services_Interfaces
         List<GetIdentityDTO> GetAllIdentity(int pageNumber);
 
         Identity GetIdentity(string email);
+        Identity Update(Identity updateIdentity);
     }
 }

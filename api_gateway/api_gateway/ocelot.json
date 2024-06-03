@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/1v/profile/{email}",
+      "DownstreamPathTemplate": "/api/1v/profile",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/profiles/{email}",
+      "UpstreamPathTemplate": "/profiles",
       "UpstreamHttpMethod": [ "Get" ],
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -177,7 +177,31 @@
         "Type": "LeastConnection"
       },
       "RouteClaimsRequirement": {
-        "Role": [ "Admin", "Moderator", "User"]
+        "Role": [ "Admin", "Moderator", "User" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/profile/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profile-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/profiles/me",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
       }
     }
   ],

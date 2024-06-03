@@ -62,5 +62,10 @@ namespace Service.Services
 
             return (base64Hash, base64Salt);
         }
+
+        public Identity Update(Identity updateIdentity)
+        {
+            return identityStorage.Update(updateIdentity);
+        }
     }
 }
