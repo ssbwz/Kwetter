@@ -32,7 +32,7 @@ namespace Tweet_service.Controllers
                
                 Tweet tweet = new Tweet()
                 {
-                    PublisherEmail = "user@gmail.com",//decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value,
+                    PublisherEmail = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value,
                     TextContent = req.TextContent,
                     IsEighteenPlus = req.IsEighteenPlus,
                 };
@@ -67,7 +67,7 @@ namespace Tweet_service.Controllers
                 TweetsFilter tweetFilter = new TweetsFilter()
                 {
                     Page = req.Page,
-                    UserEmail = "user@gmail.com",// decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value
+                    UserEmail = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value
                 };
 
                 GetAllUserResponse res = await tweetService.GetMyTweets(tweetFilter);
