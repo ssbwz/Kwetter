@@ -20,7 +20,7 @@ namespace Tweet_service.Controllers
         {
             try
             {
-               /* string authorizationHeader = Request.Headers["Authorization"];
+                string authorizationHeader = Request.Headers["Authorization"];
                 if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
                 {
                     return BadRequest("Invalid or missing Authorization header");
@@ -29,7 +29,7 @@ namespace Tweet_service.Controllers
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var decodedToken = tokenHandler.ReadJwtToken(token);
-               */
+               
                 Tweet tweet = new Tweet()
                 {
                     PublisherEmail = "user@gmail.com",//decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value,
@@ -53,7 +53,7 @@ namespace Tweet_service.Controllers
         {
             try
             {
-                /* 
+                
                 string authorizationHeader = Request.Headers["Authorization"];
                 if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
                 {
@@ -63,7 +63,7 @@ namespace Tweet_service.Controllers
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var decodedToken = tokenHandler.ReadJwtToken(token);
-                */
+                
                 TweetsFilter tweetFilter = new TweetsFilter()
                 {
                     Page = req.Page,
@@ -77,7 +77,7 @@ namespace Tweet_service.Controllers
             {
                 return StatusCode(500,"Please try again.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
