@@ -226,9 +226,6 @@
       },
       "LoadBalancerOptions": {
         "Type": "CookieStickySessions"
-      },
-      "RouteClaimsRequirement": {
-        "Role": [ "Admin", "Moderator" ]
       }
     }
   ],

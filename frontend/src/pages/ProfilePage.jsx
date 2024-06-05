@@ -120,7 +120,7 @@ function ProfilePage() {
                         <MDBCardBody>
                             <MDBRow >
                                 <MDBCol>
-                                    <img style={{ height: "10rem", width: "10rem" }} src="https://lh3.googleusercontent.com/drive-viewer/AKGpihYWmu57y3iewiAawK9gDysc1bxo0_6X1Ij-aY9qTMBisUmVrzLgCwbuPnzbnvwVeQ25N2yDbdlx3-HRA4jmrh_PkL_cj4HWx6I=s2560" />
+                                    <img style={{ height: "10rem", width: "10rem" }} src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg" />
                                 </MDBCol>
                                 <MDBCol>
                                     Name {profile.name}
