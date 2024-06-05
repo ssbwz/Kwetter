@@ -18,17 +18,20 @@ function App() {
 
 
   return (
-    <BrowserRouter>
+    <>
+
+      <BrowserRouter>
       <NavBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/me" element={<PrivateRoute Component={ProfilePage} Role={["User"]} />} />
-        <Route path="/usersmanagement" element={<PrivateRoute Component={UsersManagementPage} Role={["Admin", "Moderator"]} />} />
-        <Route path="/accessdenied" element={<AccessDeniedPage />} />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/me" element={<PrivateRoute Component={ProfilePage} Role={["User"]} />} />
+          <Route path="/usersmanagement" element={<PrivateRoute Component={UsersManagementPage} Role={["Admin", "Moderator"]} />} />
+          <Route path="/accessdenied" element={<AccessDeniedPage />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 

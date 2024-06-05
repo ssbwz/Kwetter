@@ -203,6 +203,33 @@
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
       }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/identites/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/identites/me",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Admin", "Moderator" ]
+      }
     }
   ],
   "GlobalConfiguration": {
