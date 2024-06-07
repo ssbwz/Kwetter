@@ -8,11 +8,14 @@ describe('Register User', () => {
 
     cy.visit('http://localhost:3000/Register');
 
-    const email = 'user-test@example.com';
+    const email = 'user-tsest@example.com';
     const password = 'Test123!';
+    const birthdate = '2001-06-07';
 
     cy.get('#form2').type(email);
     cy.get('#form3').type(password);
+    cy.get('#form4').type(birthdate);
+    cy.get('#termsAndConditions').click();
     cy.get('#registerbtn').click();
     cy.wait(1000)
     cy.url().should('include', 'http://localhost:3000/login');
@@ -27,19 +30,14 @@ describe('Register User', () => {
 
     const email = 'user-tsest@example.com';
     const password = 'Test123!';
-
-
+    const birthdate = '2001-06-07';
+    
     cy.get('#form2').type(email);
     cy.get('#form3').type(password);
+    cy.get('#form4').type(birthdate);
+    cy.get('#termsAndConditions').click();
     cy.get('#registerbtn').click();
-
-    cy.url().should('equal', 'http://localhost:3000/login');
-
-    cy.visit('http://localhost:3000/Register');
-
-    cy.get('#form2').type(email);
-    cy.get('#form3').type(password);
-    cy.get('#registerbtn').click();
+    cy.wait(1000)
 
     cy.contains('This email is already been used').should('be.visible');
   });

@@ -186,14 +186,14 @@ function RegisterPage() {
                                 {vBirthdate}
                                 <div className="d-flex flex-row align-items-center mb-4">
                                     <MDBIcon fas icon="envelope me-3" size='lg' />
-                                    <MDBInput label='Your birthdate' id='form2' onChange={e => setBirthdate(e.target.value)} type='date' />
+                                    <MDBInput  label='Your birthdate' id='form4' onChange={e => setBirthdate(e.target.value)} type='date' />
                                 </div>
 
 
                                 <a style={{textDecoration: "underline", color: 'blue', cursor: "pointer"}} onClick={toggleShow}>View terms and conditions</a>
                                 {popterms}
                                 {vIsAgreed}
-                                <MDBCheckbox name='flexCheck' onClick={e => setIsAgreed(!isagreed)} checked={isagreed} id='flexCheckDefault' label='I agree to the terms and conditions.' />
+                                <MDBCheckbox name='flexCheck' onClick={e => setIsAgreed(!isagreed)} checked={isagreed} id='termsAndConditions' label='I agree to the terms and conditions.' />
                                 <Button id='registerbtn' className='mb-4' onClick={register} size='lg'>Register</Button>
 
                             </MDBCol>
