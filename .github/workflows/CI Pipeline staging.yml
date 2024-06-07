@@ -79,8 +79,32 @@ jobs:
         run: |
           postman collection run "29677479-eea9d3ae-6477-43ff-8e3a-80468d64e034"
           
+          
+  ui-test:
+    needs: integration-test
+    runs-on: ubuntu-latest
+    env:
+      CI: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '${{ env.NODEJS_VERSION }}'
+        
+      - name: Docker compose tests run
+        run: docker compose up --build -d
+        
+      - name: test ui
+        run: |
+          cd frontend
+          npm install
+          npx cypress run
+
   analysis:
-   needs: integration-test
+   needs: ui-test
    runs-on: self-hosted
    steps:
       - name: Analysis identity_service
@@ -103,26 +127,3 @@ jobs:
           dotnet sonarscanner begin /k:"tweet_service" /d:sonar.host.url="${{ secrets.SONAR_HOST }}"  /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
           dotnet build
           dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TWEET_SERVICE_TOKEN }}"
-          
-  ui-test:
-    needs: analysis
-    runs-on: ubuntu-latest
-    env:
-      CI: false
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '${{ env.NODEJS_VERSION }}'
-        
-      - name: Docker compose tests run
-        run: docker compose up --build -d
-        
-      - name: test ui
-        run: |
-          cd frontend
-          npm install
-          npx cypress run
