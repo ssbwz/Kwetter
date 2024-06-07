@@ -45,8 +45,29 @@ jobs:
             npm install
             npm run build --if-present
 
+  integration-test:
+    runs-on: self-hosted
+    needs: build
+    env:
+      CI: false
+    steps:
+      - uses: actions/checkout@v3
+      - name: run docker compose
+        run: docker compose up --build -d
+      - name: wait for 20s
+        run: Start-Sleep -s 20
+      - name: Install Postman CLI
+        run: |
+          powershell.exe -NoProfile -InputFormat None -ExecutionPolicy AllSigned -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://dl-cli.pstmn.io/install/win64.ps1'))"
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run API tests
+        run: |
+          postman collection run "29677479-eea9d3ae-6477-43ff-8e3a-80468d64e034"
+
+
   analysis:
-   needs: build
+   needs: integration-test
    runs-on: self-hosted
    steps:
       - name: Analysis identity_service
