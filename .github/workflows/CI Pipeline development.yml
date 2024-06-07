@@ -53,9 +53,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: run docker compose
-        run: |
-          docker compose up --build -d
-          sleep 20s
+        run: docker compose up --build -d
+      - name: waiting for 20s 
+        run:  sleep 20s 
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
