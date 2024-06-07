@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Models.Storage_Interfaces;
 using Storage.Storages;
 using Models.Mappers;
+using Storage.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,16 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<IdentityContext>();
     dbContext.Database.Migrate();
+
+    if (!dbContext.Identities.Any())
+    {
+        dbContext.Database.EnsureCreated();
+        var data = new DataSeeding().GetIdentitys();
+
+        dbContext.Identities.AddRange(data);
+
+        dbContext.SaveChanges();
+    }
 }
 
 app.UseHttpsRedirection();
