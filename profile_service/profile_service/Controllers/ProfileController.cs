@@ -14,7 +14,7 @@ namespace profile_service.Controllers
     public class ProfileController(IProfileService profileService) : ControllerBase
     {
 
-        [HttpGet("{email}")]
+        [HttpGet]
         public IActionResult Get(string email)
         {
             Profile profile = profileService.GetProfileByEmail(email);
@@ -24,6 +24,33 @@ namespace profile_service.Controllers
             }
 
             return Ok(profile);
+
+        }
+
+        [HttpGet("me")]
+        public IActionResult GetMyProfile()
+        {
+            string authorizationHeader = Request.Headers["Authorization"];
+            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+            {
+                return BadRequest("Invalid or missing Authorization header");
+            }
+            string token = authorizationHeader.Substring("Bearer ".Length).Trim();
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var decodedToken = tokenHandler.ReadJwtToken(token);
+
+            var email = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
+
+            Profile profile = profileService.GetProfileByEmail(email);
+            Identity identity = profileService.GetUserIdentityByEmail(profile.Email);
+
+            if (profile == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new { profile = profile , identity=  identity});
 
         }
 
@@ -42,17 +69,23 @@ namespace profile_service.Controllers
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var decodedToken = tokenHandler.ReadJwtToken(token);
 
-
+                var email = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
                 Profile profile = new Profile()
                 {
-                    Email = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value,
-                    ProfileImage = Convert.FromBase64String(req.ProfileImage),
+                    Email = email,
+                    ProfileImage = new byte[] { },
                     Name = req.Name,
                     Bio = req.Bio
                 };
-
-
                 profileService.UpdateProfile(profile);
+
+
+                Identity identity = new Identity()
+                {
+                    Email = email,
+                    Birthdate = req.Birthdate
+                };
+                profileService.UpdateIdentity(identity);
                 return NoContent();
             }
             catch (Exception)

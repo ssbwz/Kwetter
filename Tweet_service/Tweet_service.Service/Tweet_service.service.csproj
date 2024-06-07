@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Message_broker\Tweet_service.message_broker.csproj" />
     <ProjectReference Include="..\tweet_service.Models\Tweet_service.model.csproj" />
   </ItemGroup>
 

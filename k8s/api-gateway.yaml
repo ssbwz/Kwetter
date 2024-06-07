@@ -1,44 +1,44 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-gatway-service-deployment
+  name: api-gateway-service-deployment
 spec:
   selector:
     matchLabels:
-      app: api-gatway-service
+      app: api-gateway-service
   template:
     metadata:
       labels:
-        app: api-gatway-service
+        app: api-gateway-service
     spec:
       containers:
-      - name: api-gatway-service
+      - name: api-gateway-service
         image: sssb4/api_gateway_service
         env:
         - name: AzureKeyVault__VaultName
           valueFrom:
             configMapKeyRef:
-              name: api-gatway-service-config
+              name: api-gateway-service-config
               key: azure_vault_name
         - name: AzureKeyVault__ClientId
           valueFrom:
             configMapKeyRef:
-              name: api-gatway-service-config
+              name: api-gateway-service-config
               key: azure_vault_clientid
         - name: AzureKeyVault__TenantId
           valueFrom:
             configMapKeyRef:
-              name: api-gatway-service-config
+              name: api-gateway-service-config
               key: azure_vault_tenantId
         - name: AzureKeyVault__ClientSecret
           valueFrom:
             secretKeyRef:
-              name: api-gatway-service-secret
+              name: api-gateway-service-secret
               key: azure_vault_client_secret
         - name: JWTKey
           valueFrom:
             secretKeyRef:
-              name: api-gatway-service-secret
+              name: api-gateway-service-secret
               key: jwtkey
         resources:
           limits:
@@ -52,10 +52,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: api-gatway-service
+  name: api-gateway-service
 spec:
   selector:
-    app: api-gatway-service
+    app: api-gateway-service
   type: LoadBalancer
   ports:
   - port: 8080
@@ -67,7 +67,7 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: api-gatway-service-config
+  name: api-gateway-service-config
 data:
   azure_vault_name: kwetter-dev-westeu-001
   azure_vault_clientid: 54e1ce92-fb15-4d78-910d-b7af13cb97d8
@@ -80,7 +80,7 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: api-gatway-service-secret
+  name: api-gateway-service-secret
 type: Opaque
 data:
   azure_vault_client_secret: ZVZHOFF+SklOTFFNTi1GdH50N2g2VXY1RXNIcDR6YlY1NmNIbWEzWg==
@@ -96,7 +96,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: api-gatway-service-deployment
+    name: api-gateway-service-deployment
   minReplicas: 2
   maxReplicas: 10
   metrics:

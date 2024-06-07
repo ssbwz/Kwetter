@@ -7,5 +7,8 @@ namespace Models.Services_Interfaces
         Identity CreateIdentity(Identity newIdentity);
         void DeleteIdentity(string email);
         List<GetIdentityDTO> GetAllIdentity(int pageNumber);
+
+        Identity GetIdentity(string email);
+        Identity Update(Identity updateIdentity);
     }
 }

@@ -5,11 +5,14 @@ describe('Login Functionality', () => {
     cy.visit('http://localhost:3000/Register');
     cy.wait(1000)
 
-    const email = 'user122@gmail.com';
+    const email = 'user001@gmail.com';
     const password = '123$User';
+    const birthdate = '2001-06-07';
 
     cy.get('#form2').type(email);
     cy.get('#form3').type(password);
+    cy.get('#form4').type(birthdate);
+    cy.get('#termsAndConditions').click();
     cy.get('#registerbtn').click();
 
     cy.url().should('equal', 'http://localhost:3000/login');

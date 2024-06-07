@@ -29,6 +29,9 @@ namespace Tweet_service.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsEighteenPlus")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("PublisherEmail")
                         .IsRequired()
                         .HasColumnType("text");

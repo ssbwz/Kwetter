@@ -9,5 +9,7 @@ namespace Tweet_service.model.Entities
 
         [MaxLength(150)]
         public string TextContent { get; set; }
+
+        public bool IsEighteenPlus { get; set; }
     }
 }

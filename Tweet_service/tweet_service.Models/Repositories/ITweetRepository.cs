@@ -6,5 +6,7 @@ namespace Tweet_service.model.Repositories
     {
         public void DeletePublisher(string email);
         public Tweet CreateTweet(Tweet tweet);
+        public List<Tweet> GetMyTweets(TweetsFilter tweetFilter);
+        int GetMyTweetsCount(TweetsFilter tweetFilter);
     }
 }

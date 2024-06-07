@@ -7,13 +7,16 @@ const login = (loginRequest) => {
 }
 
 const register = (registerRequest) => {
-    return serverbase.post(`register`, registerRequest)
+    return serverbase.post(`identites`, registerRequest)
 }
 
 const getAllIdentities = (getAllIdentitiesRequest) => {
     return serverbase.get("identites/"+ getAllIdentitiesRequest.pageNumber)
 }
 
+const deleteCurrentIdentity = () => {
+    return serverbase.delete("identites/me")
+}
 
 const deleteIdentity = (deleteIdentityRequest) => {
     return serverbase.delete("identites/" + deleteIdentityRequest.email)
@@ -56,5 +59,6 @@ export default {
     getAllIdentities,
     getCurrentUserRole,
     deleteIdentity,
-    isAuthorized
+    isAuthorized,
+    deleteCurrentIdentity
 }

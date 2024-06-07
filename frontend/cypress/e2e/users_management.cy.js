@@ -7,9 +7,12 @@ describe('Users Management Page', () => {
 
     const email = 'user@gmail.com';
     const password = 'Test123!';
+    const birthdate = '2001-06-07';
 
     cy.get('#form2').type(email);
     cy.get('#form3').type(password);
+    cy.get('#form4').type(birthdate);
+    cy.get('#termsAndConditions').click();
     cy.get('#registerbtn').click();
     cy.wait(1000)
   })

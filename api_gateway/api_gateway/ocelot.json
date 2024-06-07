@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/1v/profile/{email}",
+      "DownstreamPathTemplate": "/api/1v/profile",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -9,7 +9,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/profiles/{email}",
+      "UpstreamPathTemplate": "/profiles",
       "UpstreamHttpMethod": [ "Get" ],
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -39,7 +39,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/register",
+      "UpstreamPathTemplate": "/identites",
       "UpstreamHttpMethod": [ "Post" ],
       "RateLimitOptions": {
         "EnableRateLimiting": true,
@@ -151,6 +151,81 @@
       },
       "RouteClaimsRequirement": {
         "Role": [ "Admin", "Moderator" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/tweet/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tweet-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/tweets/me",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "RouteClaimsRequirement": {
+        "Role": [ "Admin", "Moderator", "User" ]
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/profile/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profile-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/profiles/me",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 1,
+        "Limit": 2
+      },
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/api/1v/identites/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-service",
+          "Port": 8080
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "UpstreamPathTemplate": "/identites/me",
+      "UpstreamHttpMethod": [ "Delete" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 1
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
       }
     }
   ],
