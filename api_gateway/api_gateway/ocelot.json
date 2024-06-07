@@ -39,7 +39,7 @@
           "Port": 8080
         }
       ],
-      "UpstreamPathTemplate": "/register",
+      "UpstreamPathTemplate": "/identites",
       "UpstreamHttpMethod": [ "Post" ],
       "RateLimitOptions": {
         "EnableRateLimiting": true,

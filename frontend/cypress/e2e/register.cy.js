@@ -17,7 +17,7 @@ describe('Register User', () => {
     cy.get('#form4').type(birthdate);
     cy.get('#termsAndConditions').click();
     cy.get('#registerbtn').click();
-    cy.wait(1000)
+
     cy.url().should('include', 'http://localhost:3000/login');
   });
 
@@ -37,7 +37,7 @@ describe('Register User', () => {
     cy.get('#form4').type(birthdate);
     cy.get('#termsAndConditions').click();
     cy.get('#registerbtn').click();
-    cy.wait(1000)
+  
 
     cy.contains('This email is already been used').should('be.visible');
   });

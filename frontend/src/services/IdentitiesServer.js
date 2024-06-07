@@ -7,7 +7,7 @@ const login = (loginRequest) => {
 }
 
 const register = (registerRequest) => {
-    return serverbase.post(`register`, registerRequest)
+    return serverbase.post(`identites`, registerRequest)
 }
 
 const getAllIdentities = (getAllIdentitiesRequest) => {
