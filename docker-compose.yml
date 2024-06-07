@@ -137,18 +137,18 @@ services:
       - app-network
     restart: always
 
-#  frontend:
-#    build:
-#      context: ./frontend
-#      dockerfile: Dockerfile
-#    container_name: frontend
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - api-gateway
-#    networks:
-#      - app-network
-#    restart: on-failure
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      - app-network
+    restart: on-failure
 
 volumes:
   pg_identity:
