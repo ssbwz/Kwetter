@@ -30,3 +30,7 @@
     display: flex;
     justify-content:space-around;
 }
+
+.dropdown-toggle .btn .btn-primary{
+    color: black;
+}
