@@ -16,10 +16,9 @@ function NavBar() {
 
     const [cookies, setCookie, removeCookie] = useCookies(['token'])
     const navigate = useNavigate()
-    function logOut(e) {
-        e.preventDefault();
+    function logOut() {
         removeCookie('token')
-        navigate("/")
+        navigate("/login")
     }
 
 
@@ -45,6 +44,13 @@ function NavBar() {
                 icon: "users",
                 path: "/usersmanagement",
                 text: "Users management"
+            },
+            {
+                id: 3,
+                icon: "sign-out-alt",
+                path: "",
+                text: "Log out",
+                onClick: logOut
             }
         ]
     }
@@ -63,10 +69,16 @@ function NavBar() {
                 icon: "user",
                 path: "/me",
                 text: "Profile"
+            },
+            {
+                id: 3,
+                icon: "sign-out-alt",
+                path: "",
+                text: "Log out",
+                onClick: logOut
             }
         ]
     }
-
 
     if (cookies.token) {
         return (
@@ -84,7 +96,7 @@ function NavBar() {
                         <>
                             <MDBNavbar className='link-navbar'>
                                 <MDBContainer className="link-container" fluid>
-                                    <MDBNavbarBrand key={link.id} href={link.path}> <MDBIcon fas icon={link.icon} className='link-icon' /> {link.text}</MDBNavbarBrand>
+                                    <MDBNavbarBrand onClick={link.onClick} key={link.id} href={link.path}> <MDBIcon fas icon={link.icon} className='link-icon' /> {link.text}</MDBNavbarBrand>
                                     <br />
                                 </MDBContainer>
                             </MDBNavbar>

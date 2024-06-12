@@ -10,6 +10,7 @@
 
 #col-btn-tweet button {
     size: 100px;
+    box-shadow: none;
 }
 
 .form-outline .form-control~.form-notch {
