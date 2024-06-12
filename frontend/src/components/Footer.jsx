@@ -101,42 +101,18 @@ export default function Footer() {
     if (cookies.token) {
         return (
             <MDBFooter bgColor='light' className=' fixed-bottom  text-center text-lg-start text-muted'>
-                <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
+                <section className='d-flex justify-content-center justify-content-lg-between p-2 border-bottom'>
 
                 </section>
-
                 <section className=''>
-                    <MDBContainer className='text-center text-md-start mt-5'>
+                    <MDBContainer className='text-center text-md-start mt-1'>
                         <MDBRow className='mt-3'>
-                            <MDBCol md="3" lg="4" xl="3" className='mx-auto mb-4'>
-                                <h6 className='text-uppercase fw-bold mb-4'>
-                                    <MDBIcon icon="gem" className="me-3" />
-                                    Kwetter
-                                </h6>
-                                <p>
-                                    Kwetter is a social media platform where you can post short messages called Kwets. It lets you share updates, thoughts, and ideas with your followers, and see what others are kwetting about.
-                                </p>
-                            </MDBCol>
+                           
 
-                            <MDBCol md="2" lg="2" xl="2" className='mx-auto mb-4'>
-                                <h6 className='text-uppercase fw-bold mb-4'>Products</h6>
+                            <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-1'>
+                                <h6 className='text-uppercase fw-bold mb-2'>Profile management</h6>
                                 <p>
-                                    <a style={{ cursor: "pointer" }} onClick={comingSoonShow} className='text-reset'>
-                                        Advertisement management
-                                    </a>
-                                </p>
-                                <p>
-                                    <a style={{ cursor: "pointer" }} onClick={comingSoonShow} className='text-reset'>
-                                        Influence products
-                                    </a>
-                                </p>
-                                {comingSoonPopUp}
-                            </MDBCol>
-
-                            <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-4'>
-                                <h6 className='text-uppercase fw-bold mb-4'>Profile management</h6>
-                                <p>
-                                    <a style={{ cursor: "pointer" }} onClick={deleteMyAccountShow} className='text-reset'>
+                                    <a style={{ textDecoration: "underline", color: 'blue', cursor: "pointer" }} onClick={deleteMyAccountShow} className='text-reset'>
                                         How to delete my account?
                                     </a>
                                     {deleteMyAccountPopUp}
@@ -151,7 +127,7 @@ export default function Footer() {
                     </MDBContainer>
                 </section>
 
-                <div className='text-center p-4' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
+                <div className='text-center p-2' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
                     © 2024 Copyright:
                     <a className='text-reset fw-bold' >
                         Kwetter.com
@@ -163,48 +139,8 @@ export default function Footer() {
     else {
         return <>
             <MDBFooter bgColor='light' className='fixed-bottom text-center text-lg-start text-muted'>
-                <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
 
-                </section>
-
-                <section className=''>
-                    <MDBContainer className='text-center text-md-start mt-5'>
-                        <MDBRow className='mt-3'>
-                            <MDBCol md="3" lg="4" xl="3" className='mx-auto mb-4'>
-                                <h6 className='text-uppercase fw-bold mb-4'>
-                                    <MDBIcon icon="gem" className="me-3" />
-                                    Kwetter
-                                </h6>
-                                <p>
-                                    Kwetter is a social media platform where you can post short messages called Kwets. It lets you share updates, thoughts, and ideas with your followers, and see what others are kwetting about.
-                                </p>
-                            </MDBCol>
-
-                            <MDBCol md="2" lg="2" xl="2" className='mx-auto mb-4'>
-                                <h6 className='text-uppercase fw-bold mb-4'>Products</h6>
-                                <p>
-                                    <a style={{ cursor: "pointer" }} onClick={comingSoonShow} className='text-reset'>
-                                        Advertisement management
-                                    </a>
-                                </p>
-                                <p>
-                                    <a style={{ cursor: "pointer" }} onClick={comingSoonShow} className='text-reset'>
-                                        Influence products
-                                    </a>
-                                </p>
-                                {comingSoonPopUp}
-
-                            </MDBCol>
-
-
-                            <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>
-
-                            </MDBCol>
-                        </MDBRow>
-                    </MDBContainer>
-                </section>
-
-                <div className='text-center p-4' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
+                <div className='text-center p-2' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
                     © 2024 Copyright:
                     <a className='text-reset fw-bold' >
                         Kwetter.com

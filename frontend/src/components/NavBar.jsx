@@ -2,7 +2,8 @@ import {
     MDBContainer,
     MDBNavbar,
     MDBNavbarBrand,
-    MDBIcon
+    MDBIcon,
+    MDBCol
 } from 'mdb-react-ui-kit';
 
 import { CookiesProvider, useCookies } from 'react-cookie'
@@ -67,8 +68,10 @@ function NavBar() {
     }
 
 
-    if (cookies.token != undefined) {
+    if (cookies.token) {
         return (
+            <MDBCol className='col-navbar' size='md'>
+
             <CookiesProvider>
                  <MDBNavbar className='link-navbar'>
                                 <MDBContainer className="link-container-twitter" fluid>
@@ -89,6 +92,7 @@ function NavBar() {
                     )
                 })}
             </CookiesProvider>
+                        </MDBCol>
         );
     }
     else {

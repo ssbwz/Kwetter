@@ -48,7 +48,7 @@ const getCurrentRole = () => {
     if(token){
         return jwtDecode(token).Role
     }
-    return 
+    return "Anonymous" 
 }
 
 

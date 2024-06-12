@@ -6,12 +6,13 @@ import Container from 'react-bootstrap/Container';
 import {
     MDBContainer,
     MDBInput,
+    MDBIcon
 }
     from 'mdb-react-ui-kit';
 
 import { CookiesProvider, useCookies } from 'react-cookie'
 import { Navigate, useNavigate } from 'react-router-dom';
-
+import './style/loginPage.css'
 
 function LoginPage() {
 
@@ -69,14 +70,17 @@ function LoginPage() {
         <>
             <CookiesProvider>
                 <Container>
-                    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+                    <MDBContainer className="p-3 my-5 d-flex flex-column w-50 align-items-center justify-content-center">
+                        <MDBIcon size='2x' fab icon="twitter" className='twitter-icon' />
+                        <h4>Login to Kwetter</h4>
                         <Form.Label>{vEmail}</Form.Label>
-                        <MDBInput id="formBasicEmail" wrapperClass='mb-4' label='Email address' onChange={e => setEmail(e.target.value)} type='email' />
+                        <MDBInput id="formBasicEmail" wrapperClass='mb-4' label='Phone, email, or username' onChange={e => setEmail(e.target.value)} type='email' />
                         <Form.Label>{errorMessage}</Form.Label>
                         <MDBInput id="formBasicPassword" wrapperClass='mb-4' label='Password' onChange={e => setPassword(e.target.value)} type='password' />
-                        <Button id="loginButton" className="mb-4" onClick={login} >Sign in</Button>
+                        <Button id="loginButton" className="mb-4" onClick={login} >Log in</Button>
                         <div className="text-center">
-                            <a style={{ cursor: "pointer" }} onClick={e => { navigate("/Register") }}> Create a user</a>
+                            <a style={{ color: 'blue', cursor: "pointer" }} >Forgot password?</a> -
+                            <a style={{ color: 'blue', cursor: "pointer" }} onClick={e => { navigate("/Register") }}> Sign up for kwetter</a>
                         </div>
                     </MDBContainer>
                 </Container>

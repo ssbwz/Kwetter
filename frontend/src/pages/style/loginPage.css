@@ -1,0 +1,15 @@
+.twitter-icon {
+    color: #1ea0f3;
+    margin-bottom: 0.7rem;
+}
+
+#loginButton {
+    align-self: normal;
+    border-radius: 0;
+    background-color: #21a0ed;
+    box-shadow: none;
+}
+
+.form-outline .form-control {
+    background-color: #f4f8fb;
+}

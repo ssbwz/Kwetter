@@ -19,6 +19,7 @@ import {
   MDBRow,
   MDBCol
 } from 'mdb-react-ui-kit';
+import TweetSearchComponent from './components/TweetSearchComponent';
 
 function App() {
 
@@ -29,25 +30,19 @@ function App() {
       <BrowserRouter>
         <MDBContainer>
           <MDBRow>
-            <MDBCol className='col-navbar' size='md'>
-              <NavBar />
-            </MDBCol>
+            <NavBar />
             <MDBCol size='md'>
               <Routes>
                 <Route path="/" element={<PrivateRoute Component={HomePage} Role={["User", "Admin", "Moderator"]} />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                <Route path="/login" element={<PrivateRoute Component={LoginPage} Role={["Anonymous"]} />} />
+                <Route path="/register" element={<PrivateRoute Component={RegisterPage} Role={["Anonymous"]} />} />
                 <Route path="/me" element={<PrivateRoute Component={ProfilePage} Role={["User"]} />} />
                 <Route path="/usersmanagement" element={<PrivateRoute Component={UsersManagementPage} Role={["Admin", "Moderator"]} />} />
                 <Route path="/accessdenied" element={<AccessDeniedPage />} />
               </Routes>
             </MDBCol>
-            <MDBCol className='col-hashtages' size='md'>
-
-            </MDBCol>
+            <TweetSearchComponent />
           </MDBRow>
-
-
           <Footer />
         </MDBContainer>
       </BrowserRouter>
@@ -61,13 +56,15 @@ const PrivateRoute = ({ Component, Role }) => {
   const [cookies, setCookie] = useCookies(['user'])
   const [isAuthenticated, setIsAuthenticated] = useState(cookies.token);
   if (isAuthenticated) {
-
-    if (Role.includes(IdentitiesServer.getCurrentUserRole())) {
+    if (Role.includes(IdentitiesServer.getCurrentRole())) {
       return <Component />
     } else {
       return <Navigate to="/accessdenied" />
     }
   } else {
+    if (["RegisterPage", "LoginPage"].includes(Component.name)) {
+      return <Component />
+    }
     return <Navigate to="/login" />
   }
 };
