@@ -1,0 +1,32 @@
+.box {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+#col-btn-tweet {
+    justify-content: end;
+    display: flex;
+}
+
+#col-btn-tweet button {
+    size: 100px;
+}
+
+.form-outline .form-control~.form-notch {
+    display: none;
+}
+
+#createTweetprofileImage{
+    height: 3rem;
+    width: 3rem;
+}
+
+.icon{
+    color: #1ea0f3;
+    font-size: 1.5rem;
+}
+
+.toolbar{
+    display: flex;
+    justify-content:space-around;
+}

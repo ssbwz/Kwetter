@@ -42,6 +42,15 @@ const getCurrentUserRole = () => {
     return 
 }
 
+const getCurrentRole = () => {
+
+    var token = document.cookie.split('=')[1]
+    if(token){
+        return jwtDecode(token).Role
+    }
+    return 
+}
+
 
 const isAuthorized = () => {
 
@@ -60,5 +69,6 @@ export default {
     getCurrentUserRole,
     deleteIdentity,
     isAuthorized,
-    deleteCurrentIdentity
+    deleteCurrentIdentity,
+    getCurrentRole
 }

@@ -1,28 +1,13 @@
 
-import IdentitiesServer from "../services/IdentitiesServer";
-import {
-    MDBContainer
-}
-    from 'mdb-react-ui-kit';
 import TweetComponent from "../components/TweetComponent";
-import { useCookies } from "react-cookie";
-import Footer from "../components/Footer";
-
+import './style/homePage.css'
 function HomePage() {
-    const [cookies, setCookie, removeCookie] = useCookies(['token'])
-    
-    if (cookies.token) {
-        return <>
-            <MDBContainer>
-                <TweetComponent />
 
-            </MDBContainer>
-            <Footer/>
-        </>
-    } else {
-        return <> login pls
-                        <Footer/></>
-    }
+    return <>
+        <h4 className="title">Home</h4>
+        <hr style={{ border: "none", backgroundColor: "#333", height: "0.5px", color: "#d8dadb", margin: "0" }}></hr>
+        <TweetComponent />
+    </>
 
 }
 

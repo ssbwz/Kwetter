@@ -100,7 +100,7 @@ export default function Footer() {
     </MDBModal>
     if (cookies.token) {
         return (
-            <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
+            <MDBFooter bgColor='light' className=' fixed-bottom  text-center text-lg-start text-muted'>
                 <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
 
                 </section>
@@ -162,7 +162,7 @@ export default function Footer() {
     }
     else {
         return <>
-            <MDBFooter bgColor='light' className='text-center text-lg-start text-muted'>
+            <MDBFooter bgColor='light' className='fixed-bottom text-center text-lg-start text-muted'>
                 <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
 
                 </section>
