@@ -33,6 +33,7 @@ export default function Footer() {
 
     async function deleteMyAccount() {
         await IdentitiesServer.deleteCurrentIdentity()
+        removeCookie("token")
         navigate("/login")
     }
 
@@ -99,7 +100,10 @@ export default function Footer() {
         </MDBModalDialog>
     </MDBModal>
     if (cookies.token) {
+        
         return (
+            <>
+                                    {deleteMyAccountPopUp}
             <MDBFooter bgColor='light' className=' fixed-bottom  text-center text-lg-start text-muted'>
                 <section className='d-flex justify-content-center justify-content-lg-between p-2 border-bottom'>
 
@@ -115,7 +119,6 @@ export default function Footer() {
                                     <a style={{ textDecoration: "underline", color: 'blue', cursor: "pointer" }} onClick={deleteMyAccountShow} className='text-reset'>
                                         How to delete my account?
                                     </a>
-                                    {deleteMyAccountPopUp}
                                 </p>
 
                             </MDBCol>
@@ -134,6 +137,8 @@ export default function Footer() {
                     </a>
                 </div>
             </MDBFooter>
+            </>
+
         );
     }
     else {

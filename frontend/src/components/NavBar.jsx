@@ -82,7 +82,7 @@ function NavBar() {
 
     if (cookies.token) {
         return (
-            <MDBCol className='col-navbar' size='md'>
+            <MDBCol className='col-navbar' size='2'>
 
             <CookiesProvider>
                  <MDBNavbar className='link-navbar'>

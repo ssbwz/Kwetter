@@ -3,6 +3,7 @@ import {
     MDBCol
 } from 'mdb-react-ui-kit';
 import { useCookies } from 'react-cookie';
+import "./style/tweetSearchComponent.css"
 
 export default function TweetSearchComponent() {
     const [cookies, setCookie] = useCookies(['token'])

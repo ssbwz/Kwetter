@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import profilesServer from "../services/ProfilesServer"
 import IdentitiesServer from "../services/IdentitiesServer";
 import Container from 'react-bootstrap/Container';
-
+import "./style/profilePage.css"
 import {
     MDBRow,
     MDBCol,
@@ -85,7 +85,7 @@ function ProfilePage() {
         if (editMode) {
             return <> <Container fluid>
 
-                <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
+                <MDBCard className='text-black m-6' style={{ borderRadius: '25px' }}>
                     <MDBCardBody>
                         <MDBRow >
                             <MDBCol >
@@ -120,7 +120,7 @@ function ProfilePage() {
                         <MDBCardBody>
                             <MDBRow >
                                 <MDBCol>
-                                    <img style={{ height: "10rem", width: "10rem" }} src="https://t4.ftcdn.net/jpg/02/29/75/83/360_F_229758328_7x8jwCwjtBMmC6rgFzLFhZoEpLobB6L8.jpg" />
+                                    <img style={{ height: "10rem", width: "10rem" }} className='img-fluid rounded-circle' src="https://kwetter001.blob.core.windows.net/profile/userPic.jpg" />
                                 </MDBCol>
                                 <MDBCol>
                                     Name {profile.name}

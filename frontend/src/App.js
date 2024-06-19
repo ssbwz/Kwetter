@@ -6,7 +6,7 @@ import HomePage from "./pages/HomePage"
 import ProfilePage from "./pages/ProfilePage"
 import LoginPage from "./pages/LoginPage";
 import { useCookies } from "react-cookie";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import NavBar from "./components/NavBar";
 import RegisterPage from './pages/RegisterPage';
@@ -22,8 +22,6 @@ import {
 import TweetSearchComponent from './components/TweetSearchComponent';
 
 function App() {
-
-
   return (
     <>
 
