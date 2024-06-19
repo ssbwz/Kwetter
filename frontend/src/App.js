@@ -38,8 +38,7 @@ function App() {
                 <Route path="/usersmanagement" element={<PrivateRoute Component={UsersManagementPage} Role={["Admin", "Moderator"]} />} />
                 <Route path="/accessdenied" element={<AccessDeniedPage />} />
               </Routes>
-            </MDBCol>
-            <TweetSearchComponent />
+            </MDBCol >
           </MDBRow>
           <Footer />
         </MDBContainer>

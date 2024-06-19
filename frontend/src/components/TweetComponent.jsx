@@ -69,6 +69,7 @@ function TweetComponent() {
         </MDBModal>
     </>
     return <>
+    <MDBCol size='xl' style={{padding: '0', margin: '10px 0 0 0'}} c>
         <MDBCard className='box'>
             <MDBCardBody>
                 <MDBRow >
@@ -97,6 +98,9 @@ function TweetComponent() {
                 </MDBRow>
             </MDBCardBody>
         </MDBCard>
+        <hr style={{ border: "none", backgroundColor: "#333", height: "0.5px", color: "#d8dadb", margin: "0" }}></hr>
+
+        </MDBCol>
     </>
 }
 

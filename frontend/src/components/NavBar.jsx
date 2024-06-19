@@ -79,7 +79,7 @@ function NavBar() {
     if (cookies.token) {
         return (
             <>
-                <MDBNavbar expand='lg' light bgColor='light'>
+                <MDBNavbar expand='lg' >
                     <MDBContainer fluid>
                         <MDBNavbarToggler
                             aria-controls='navbarSupportedContent'

@@ -61,3 +61,9 @@
 .dropdown>.dropdown-toggle:active {
     pointer-events: none;
 }
+
+.navbar.navbar-expand-lg{
+    box-shadow: none;
+    border-bottom: 1.7px solid;
+    border-color: #d8dadb;
+}

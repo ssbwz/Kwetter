@@ -1,4 +1,4 @@
-
-.col-hashtages{
-    display: none;
+.col-hashtages {
+    border-left: thin solid;
+    border-color: #d8dadb;
 }
