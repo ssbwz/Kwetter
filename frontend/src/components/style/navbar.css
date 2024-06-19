@@ -2,17 +2,13 @@
     padding-right: 12px;
 }
 
-.link-icon-twitter {
+.icon-twitter {
     color: #1ea0f3;
 }
 
-
-
-.link-navbar .link-container-twitter .link-brand-twitter  {
+.link-navbar .link-container-twitter .link-brand-twitter {
     margin-left: 37%;
-
 }
-
 
 .link-icon:hover {
     color: #1ea0f3;
@@ -36,3 +32,32 @@
     justify-content: center;
 }
 
+.dropdown-toggle::after {
+    content: none;
+}
+
+#midNavbar {
+    width: inherit;
+    justify-content: center;
+}
+
+#endnavbar {
+    width: max-content !important;
+}
+
+#startnavbar {
+    width: max-content !important;
+}
+
+#dropdownMenuButton {
+    height: 3rem;
+    width: 3rem;
+}
+
+.dropdown:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown>.dropdown-toggle:active {
+    pointer-events: none;
+}
