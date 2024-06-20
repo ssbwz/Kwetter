@@ -24,6 +24,7 @@ builder.Services.AddTransient<IProfileRepository, ProfileRepository>();
 builder.Services.AddTransient<IProfileService, ProfileService>();
 
 builder.Services.AddHostedService<MessageBroker>();
+builder.Services.AddHealthChecks();
 
 
 builder.Services.AddDbContext<ProfileContext>(options =>
@@ -54,6 +55,14 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<ProfileContext>();
     dbContext.Database.Migrate();
 }
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHealthChecks("/health");
+});
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

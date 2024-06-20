@@ -1,4 +1,4 @@
-import serverbase from "./Serverbase";
+import { base as serverbase } from "./Serverbase";
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -11,11 +11,21 @@ const register = (registerRequest) => {
 }
 
 const getAllIdentities = (getAllIdentitiesRequest) => {
-    return serverbase.get("identites/"+ getAllIdentitiesRequest.pageNumber)
+    return serverbase.get("identites/" + getAllIdentitiesRequest.pageNumber)
 }
 
 const deleteCurrentIdentity = () => {
     return serverbase.delete("identites/me")
+}
+
+const isServiceHealthy = async () => {
+    try {
+        var res = await serverbase.get("identities/health")
+        return res.status === 200
+    }
+    catch (error) {
+        return false
+    }
 }
 
 const deleteIdentity = (deleteIdentityRequest) => {
@@ -25,43 +35,44 @@ const deleteIdentity = (deleteIdentityRequest) => {
 const getCurrentUserEmail = () => {
 
     var token = document.cookie.split('=')[1]
-    if(token){
+    if (token) {
         return jwtDecode(token).Email
     }
     window.location.replace('/login')
-    return 
+    return
 }
 
 const getCurrentUserRole = () => {
 
     var token = document.cookie.split('=')[1]
-    if(token){
+    if (token) {
         return jwtDecode(token).Role
     }
     window.location.replace('/login')
-    return 
+    return
 }
 
 const getCurrentRole = () => {
 
     var token = document.cookie.split('=')[1]
-    if(token){
+    if (token) {
         return jwtDecode(token).Role
     }
-    return "Anonymous" 
+    return "Anonymous"
 }
 
 
 const isAuthorized = () => {
 
     var token = document.cookie.split('=')[1]
-    if(token){
+    if (token) {
         return true
     }
-    return false 
+    return false
 }
 
 export default {
+    isServiceHealthy,
     login,
     register,
     getCurrentUserEmail,

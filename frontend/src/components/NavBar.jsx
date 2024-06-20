@@ -28,7 +28,7 @@ function NavBar() {
     const navigate = useNavigate()
     function logOut() {
         removeCookie('token')
-        navigate("/login")
+        window.location.replace("/login");
     }
     const [firstSection, setFirstSection] = useState(false);
     const [secondSection, setSecondSection] = useState(false);
@@ -75,6 +75,12 @@ function NavBar() {
         e.preventDefault();
         navigate(path)
     }
+    function viewMyProfile(e) {
+        e.preventDefault();
+        if (["User"].includes(IdentitiesServer.getCurrentRole())) {
+            navigate("/me")
+        }
+    }
 
     if (cookies.token) {
         return (
@@ -117,7 +123,7 @@ function NavBar() {
                                         src='https://kwetter001.blob.core.windows.net/profile/userPic.jpg'
                                         className='img-fluid rounded-circle'
                                         alt='User image'
-                                        onClick={e => navigatetor(e, "/me")}
+                                        onClick={e => viewMyProfile(e)}
                                     />
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <li><a class="dropdown-item" href="#"><MDBIcon fas icon="cog" className='link-icon' />Settings</a></li>

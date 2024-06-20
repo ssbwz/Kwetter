@@ -15,8 +15,19 @@ const header = () => {
         }
 }
 
-export default axios.create({
+export const isApiGatewayHealthy = async () => {
+    try {
+        var res = await base.get("/health")
+        return res.status === 200
+    }
+    catch (error) {
+        return false
+    }
+}
+
+export const base = axios.create({
     baseURL: "http://localhost:8080/",
     ...header()
 }
 );
+

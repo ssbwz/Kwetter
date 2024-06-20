@@ -19,9 +19,32 @@ import {
   MDBRow,
   MDBCol
 } from 'mdb-react-ui-kit';
-import TweetSearchComponent from './components/TweetSearchComponent';
+import { useGlobalState, useGlobalStateUpdate } from './GlobalState';
+import ProfilesServer from './services/ProfilesServer';
+import TweetServer from './services/TweetServer';
+import { isApiGatewayHealthy } from './services/Serverbase';
+import ServiceDownPage from './pages/ServiceDownPage';
 
 function App() {
+  const setGlobalState = useGlobalStateUpdate()
+  useEffect(() => {
+    const initializeState = async () => {
+      const identityService = await IdentitiesServer.isServiceHealthy();
+      const profileService = await ProfilesServer.isServiceHealthy();
+      const tweetService = await TweetServer.isServiceHealthy();
+      const apiGatewayService = await isApiGatewayHealthy();
+
+      setGlobalState({
+        identityService,
+        profileService,
+        tweetService,
+        apiGatewayService
+      });
+    };
+
+    initializeState();
+  }, [setGlobalState]);
+
   return (
     <>
 
@@ -37,6 +60,7 @@ function App() {
                 <Route path="/me" element={<PrivateRoute Component={ProfilePage} Role={["User"]} />} />
                 <Route path="/usersmanagement" element={<PrivateRoute Component={UsersManagementPage} Role={["Admin", "Moderator"]} />} />
                 <Route path="/accessdenied" element={<AccessDeniedPage />} />
+                <Route path="/service-down" element={<ServiceDownPage />} />
               </Routes>
             </MDBCol >
           </MDBRow>

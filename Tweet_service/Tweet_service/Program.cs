@@ -33,6 +33,7 @@ builder.Services.AddDbContext<TweetContext>(options =>
         config["ConnectionStrings:url"],
         x => { x.MigrationsAssembly("Tweet_service"); });
 });
+builder.Services.AddHealthChecks();
 
 builder.Services.AddSwaggerGen();
 
@@ -55,6 +56,14 @@ using (var scope = app.Services.CreateScope())
     var dbContext = scope.ServiceProvider.GetRequiredService<TweetContext>();
     dbContext.Database.Migrate();
 }
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHealthChecks("/health");
+});
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

@@ -22,6 +22,7 @@ import IdentitiesServer from "../services/IdentitiesServer"
 import { Button } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import { useNavigate } from 'react-router-dom';
+import { useGlobalState, useGlobalStateUpdate } from '../GlobalState'
 
 function RegisterPage() {
 
@@ -33,12 +34,13 @@ function RegisterPage() {
     const [vBirthdate, setVBirthdate] = useState();
     const [vIsAgreed, setVIsAgreed] = useState();
     const [isagreed, setIsAgreed] = useState(false);
+    const isServiceAvailable = useGlobalState();
+    const setGlobalState = useGlobalStateUpdate();
     const navigate = useNavigate();
 
     const [termsPopModal, setTermsPopModal] = useState(false);
 
     const toggleShow = () => {
-        console.log(termsPopModal)
         setTermsPopModal(!termsPopModal)
     };
 
@@ -83,10 +85,25 @@ function RegisterPage() {
                         }
                         else
                             setVEmail(undefined)
+                        if (error.response.status === 502) {
+                            setGlobalState({
+                                identityService: false,
+                                profileService: isServiceAvailable.profileService,
+                                tweetService: isServiceAvailable.tweetService,
+                                apiGatewayService: isServiceAvailable.apiGatewayService,
+                            })
+                        }
+                        else
+                            setGlobalState({
+                                identityService: true,
+                                profileService: isServiceAvailable.profileService,
+                                tweetService: isServiceAvailable.tweetService,
+                                apiGatewayService: isServiceAvailable.apiGatewayService,
+                            })
                     }
                 })
-                
-            if (response.status === 201) {                
+
+            if (response.status === 201) {
                 navigate("/login")
             }
         }
@@ -161,51 +178,57 @@ function RegisterPage() {
                 </MDBModalDialog>
             </MDBModal>
         </>
+    if (isServiceAvailable.identityService === true) {
+        return (
+            <Container>
+                <MDBContainer fluid>
 
-    return (
-        <Container>
-            <MDBContainer fluid>
+                    <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
+                        <MDBCardBody>
+                            <MDBRow>
+                                <MDBCol className='order-2 order-lg-1 d-flex flex-column'>
 
-                <MDBCard className='text-black m-5' style={{ borderRadius: '25px' }}>
-                    <MDBCardBody>
-                        <MDBRow>
-                            <MDBCol className='order-2 order-lg-1 d-flex flex-column'>
+                                    <p classNAme="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+                                    {vEmail}
+                                    <div className="d-flex flex-row align-items-center mb-4">
+                                        <MDBIcon fas icon="envelope me-3" size='lg' />
+                                        <MDBInput label='Your Email' id='form2' onChange={e => setEmail(e.target.value)} type='email' />
+                                    </div>
 
-                                <p classNAme="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
-                                {vEmail}
-                                <div className="d-flex flex-row align-items-center mb-4">
-                                    <MDBIcon fas icon="envelope me-3" size='lg' />
-                                    <MDBInput label='Your Email' id='form2' onChange={e => setEmail(e.target.value)} type='email' />
-                                </div>
-
-                                {vPassword}
-                                <div className="d-flex flex-row align-items-center mb-4">
-                                    <MDBIcon fas icon="lock me-3" size='lg' />
-                                    <MDBInput label='Password' id='form3' onChange={e => setPassword(e.target.value)} type='text' />
-                                </div>
-
-
-                                {vBirthdate}
-                                <div className="d-flex flex-row align-items-center mb-4">
-                                    <MDBIcon fas icon="envelope me-3" size='lg' />
-                                    <MDBInput label='Your birthdate' id='form4' onChange={e => setBirthdate(e.target.value)} type='date' />
-                                </div>
+                                    {vPassword}
+                                    <div className="d-flex flex-row align-items-center mb-4">
+                                        <MDBIcon fas icon="lock me-3" size='lg' />
+                                        <MDBInput label='Password' id='form3' onChange={e => setPassword(e.target.value)} type='text' />
+                                    </div>
 
 
-                                <a style={{ textDecoration: "underline", color: 'blue', cursor: "pointer" }} onClick={toggleShow}>View terms and conditions</a>
-                                {popterms}
-                                {vIsAgreed}
-                                <MDBCheckbox name='flexCheck' onClick={e => setIsAgreed(!isagreed)} checked={isagreed} id='termsAndConditions' label='I agree to the terms and conditions.' />
-                                <Button id='registerbtn' className='mb-4' onClick={register} size='lg'>Register</Button>
+                                    {vBirthdate}
+                                    <div className="d-flex flex-row align-items-center mb-4">
+                                        <MDBIcon fas icon="envelope me-3" size='lg' />
+                                        <MDBInput label='Your birthdate' id='form4' onChange={e => setBirthdate(e.target.value)} type='date' />
+                                    </div>
 
-                            </MDBCol>
-                        </MDBRow>
-                    </MDBCardBody>
-                </MDBCard>
 
-            </MDBContainer>
-        </Container>
-    );
+                                    <a style={{ textDecoration: "underline", color: 'blue', cursor: "pointer" }} onClick={toggleShow}>View terms and conditions</a>
+                                    {popterms}
+                                    {vIsAgreed}
+                                    <MDBCheckbox name='flexCheck' onClick={e => setIsAgreed(!isagreed)} checked={isagreed} id='termsAndConditions' label='I agree to the terms and conditions.' />
+                                    <Button id='registerbtn' className='mb-4' onClick={register} size='lg'>Register</Button>
+
+                                </MDBCol>
+                            </MDBRow>
+                        </MDBCardBody>
+                    </MDBCard>
+
+                </MDBContainer>
+            </Container>
+        );
+    }
+    else if (isServiceAvailable.identityService !== true){
+        return <>
+            Sorry this feature is temporarily unavailable
+        </>
+    }
 }
 
 export default RegisterPage;

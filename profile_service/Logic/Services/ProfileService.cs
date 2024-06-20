@@ -4,7 +4,6 @@ using profile_service.model.Models;
 using profile_service.model.Repositories;
 using profile_service.model.Services;
 using Profile_service.message_broker;
-using System.Security.Principal;
 
 namespace profile_service.logic.Services
 {

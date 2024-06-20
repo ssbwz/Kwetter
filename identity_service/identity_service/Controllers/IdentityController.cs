@@ -1,4 +1,4 @@
-﻿    using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Models.Auth;
 using Models.Exceptions;
 using Models.Identities;
@@ -45,6 +45,10 @@ namespace identity_service.Controllers
             {
                 return BadRequest("The email is already is been used.");
             }
+            catch (BrokerException)
+            {
+                return StatusCode(502);
+            }
             catch (Exception)
             {
                 return StatusCode(500);
@@ -61,9 +65,9 @@ namespace identity_service.Controllers
                 identityService.DeleteIdentity(email.ToLower());
                 return NoContent();
             }
-            catch (AssetAlreadyExistException)
+            catch (BrokerException)
             {
-                return BadRequest("The email is already is been used.");
+                return StatusCode(502);
             }
             catch (Exception)
             {
@@ -91,9 +95,9 @@ namespace identity_service.Controllers
                 identityService.DeleteIdentity(email.ToLower());
                 return NoContent();
             }
-            catch (AssetAlreadyExistException)
+            catch (BrokerException)
             {
-                return BadRequest("The email is already is been used.");
+                return StatusCode(502);
             }
             catch (Exception)
             {

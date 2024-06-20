@@ -75,7 +75,7 @@ namespace Tweet_service.Controllers
             }
             catch (BrokerException)
             {
-                return StatusCode(500,"Please try again.");
+                return StatusCode(502,"Please try again.");
             }
             catch (Exception)
             {

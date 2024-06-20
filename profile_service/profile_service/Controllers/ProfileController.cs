@@ -2,6 +2,7 @@
 using profile_service.model.Models;
 using profile_service.model.Services;
 using profile_service.Models.Profiles;
+using Profile_service.message_broker;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Principal;
 
@@ -30,27 +31,44 @@ namespace profile_service.Controllers
         [HttpGet("me")]
         public IActionResult GetMyProfile()
         {
-            string authorizationHeader = Request.Headers["Authorization"];
-            if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+            try
             {
-                return BadRequest("Invalid or missing Authorization header");
+                string authorizationHeader = Request.Headers["Authorization"];
+                if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("Bearer "))
+                {
+                    return BadRequest("Invalid or missing Authorization header");
+                }
+                string token = authorizationHeader.Substring("Bearer ".Length).Trim();
+
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var decodedToken = tokenHandler.ReadJwtToken(token);
+
+                var email = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
+
+                Profile profile = profileService.GetProfileByEmail(email);
+                Identity identity = null;
+                try
+                {
+                    identity = profileService.GetUserIdentityByEmail(profile.Email);
+                }
+                catch (AggregateException)
+                {
+                }
+
+                if (profile == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(new { profile = profile, identity = identity });
             }
-            string token = authorizationHeader.Substring("Bearer ".Length).Trim();
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var decodedToken = tokenHandler.ReadJwtToken(token);
-
-            var email = decodedToken.Claims.FirstOrDefault(c => c.Type == "Email")?.Value;
-
-            Profile profile = profileService.GetProfileByEmail(email);
-            Identity identity = profileService.GetUserIdentityByEmail(profile.Email);
-
-            if (profile == null)
+            catch (BrokerException) {
+                return StatusCode(502);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(500);
             }
-
-            return Ok(new { profile = profile , identity=  identity});
 
         }
 
@@ -87,6 +105,10 @@ namespace profile_service.Controllers
                 };
                 profileService.UpdateIdentity(identity);
                 return NoContent();
+            }
+            catch (BrokerException)
+            {
+                return StatusCode(502);
             }
             catch (Exception)
             {

@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import identityService from '../services/IdentitiesServer';
 import Container from 'react-bootstrap/Container';
 import {
@@ -13,6 +13,7 @@ import {
 import { CookiesProvider, useCookies } from 'react-cookie'
 import { Navigate, useNavigate } from 'react-router-dom';
 import './style/loginPage.css'
+import { useGlobalState, useGlobalStateUpdate } from '../GlobalState';
 
 function LoginPage() {
 
@@ -21,7 +22,10 @@ function LoginPage() {
     const [vEmail, setVEmail] = useState();
     const [errorMessage, setErrorMessage] = useState();
     const [cookies, setCookie] = useCookies(['token'])
+    const [token, setToken] = useState(cookies.token)
     const navigate = useNavigate();
+    const isServiceAvailable = useGlobalState();
+    const setGlobalState = useGlobalStateUpdate();
 
     const login = () => {
         try {
@@ -37,8 +41,8 @@ function LoginPage() {
             }
             identityService.login(credentials).then((res) => {
 
-                setCookie('token', res.data.token, { path: '/', secure: true, maxAge: 60 * 999 });
-                window.location.replace('/')
+                setCookie('token', res.data.token, { path: '/', secure: true, maxAge: 60 * 2 });
+                window.location.replace("/");
                 return
             }).catch(function (error) {
                 if (error.response) {
@@ -50,6 +54,22 @@ function LoginPage() {
                         setErrorMessage("Please check your credentials");
                         return
                     }
+
+                    if (error.response.status === 502) {
+                        setGlobalState({
+                            identityService: false,
+                            profileService: isServiceAvailable.profileService,
+                            tweetService: isServiceAvailable.tweetService,
+                            apiGatewayService: isServiceAvailable.apiGatewayService,
+                        })
+                    }
+                    else
+                        setGlobalState({
+                            identityService: true,
+                            profileService: isServiceAvailable.profileService,
+                            tweetService: isServiceAvailable.tweetService,
+                            apiGatewayService: isServiceAvailable.apiGatewayService,
+                        })
 
                 }
             })
@@ -65,28 +85,32 @@ function LoginPage() {
         var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(email);
     }
-
-    return (
-        <>
-            <CookiesProvider>
-                <Container>
-                    <MDBContainer className="p-3 my-5 d-flex flex-column w-50 align-items-center justify-content-center">
-                        <MDBIcon size='2x' fab icon="twitter" className='twitter-icon' />
-                        <h4>Login to Kwetter</h4>
-                        <Form.Label>{vEmail}</Form.Label>
-                        <MDBInput id="formBasicEmail" wrapperClass='mb-4' label='Phone, email, or username' onChange={e => setEmail(e.target.value)} type='email' />
-                        <Form.Label>{errorMessage}</Form.Label>
-                        <MDBInput id="formBasicPassword" wrapperClass='mb-4' label='Password' onChange={e => setPassword(e.target.value)} type='password' />
-                        <Button id="loginButton" className="mb-4" onClick={login} >Log in</Button>
-                        <div className="text-center">
-                            <a style={{ color: 'blue', cursor: "pointer" }} >Forgot password?</a> -
-                            <a style={{ color: 'blue', cursor: "pointer" }} onClick={e => { navigate("/Register") }}> Sign up for kwetter</a>
-                        </div>
-                    </MDBContainer>
-                </Container>
-            </CookiesProvider>
-        </>
-    )
+    if (isServiceAvailable.identityService === true) {
+        return (
+            <>
+                <CookiesProvider>
+                    <Container>
+                        <MDBContainer className="p-3 my-5 d-flex flex-column w-50 align-items-center justify-content-center">
+                            <MDBIcon size='2x' fab icon="twitter" className='twitter-icon' />
+                            <h4>Login to Kwetter</h4>
+                            <Form.Label>{vEmail}</Form.Label>
+                            <MDBInput id="formBasicEmail" wrapperClass='mb-4' label='Phone, email, or username' onChange={e => setEmail(e.target.value)} type='email' />
+                            <Form.Label>{errorMessage}</Form.Label>
+                            <MDBInput id="formBasicPassword" wrapperClass='mb-4' label='Password' onChange={e => setPassword(e.target.value)} type='password' />
+                            <Button id="loginButton" className="mb-4" onClick={login} >Log in</Button>
+                            <div className="text-center">
+                                <a style={{ color: 'blue', cursor: "pointer" }} >Forgot password?</a> -
+                                <a style={{ color: 'blue', cursor: "pointer" }} onClick={e => { navigate("/Register") }}> Sign up for kwetter</a>
+                            </div>
+                        </MDBContainer>
+                    </Container>
+                </CookiesProvider>
+            </>
+        )
+    } else if (isServiceAvailable.identityService !== true) {
+        navigate('/service-down')
+        return
+    }
 
 }
 

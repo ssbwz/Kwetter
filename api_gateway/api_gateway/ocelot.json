@@ -227,6 +227,69 @@
       "LoadBalancerOptions": {
         "Type": "CookieStickySessions"
       }
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-service",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/identities/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 5
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "profile-service",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/profiles/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 5
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/health",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tweet-service",
+          "Port": 8080
+        }
+      ],
+      "UpstreamPathTemplate": "/tweets/health",
+      "UpstreamHttpMethod": [ "Get" ],
+      "RateLimitOptions": {
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 5,
+        "Limit": 5
+      },
+      "LoadBalancerOptions": {
+        "Type": "CookieStickySessions"
+      }
     }
   ],
   "GlobalConfiguration": {

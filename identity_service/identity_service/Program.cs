@@ -1,4 +1,4 @@
-using Storage.Services;
+    using Storage.Services;
 using Storage.DbContext;
 using Models.Services_Interfaces;
 using Service.Services;
@@ -30,8 +30,7 @@ builder.Services.AddTransient<IMessageBroker, MessageBroker>();
 builder.Services.AddAutoMapper(typeof(IdentityMapper));
 
 builder.Services.AddHostedService<RPCServer>();
-
-
+builder.Services.AddHealthChecks();
 builder.Services.AddDbContext<IdentityContext>(options =>
 {
     options.UseNpgsql(
@@ -64,6 +63,14 @@ using (var scope = app.Services.CreateScope())
         dbContext.SaveChanges();
     }
 }
+
+app.UseRouting();
+
+app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+        endpoints.MapHealthChecks("/health");
+    });
 
 app.UseHttpsRedirection();
 

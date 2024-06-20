@@ -18,23 +18,29 @@ namespace Profile_service.message_broker
         {
             var factory = new ConnectionFactory { HostName = configuration["Broker:host"] };
 
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
-            // declare a server-named queue
-            replyQueueName = channel.QueueDeclare().QueueName;
-            var consumer = new EventingBasicConsumer(channel);
-            consumer.Received += (model, ea) =>
+            try
             {
-                if (!callbackMapper.TryRemove(ea.BasicProperties.CorrelationId, out var tcs))
-                    return;
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                tcs.TrySetResult(response);
-            };
+                connection = factory.CreateConnection();
+                channel = connection.CreateModel();
+                // declare a server-named queue
+                replyQueueName = channel.QueueDeclare().QueueName;
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += (model, ea) =>
+                {
+                    if (!callbackMapper.TryRemove(ea.BasicProperties.CorrelationId, out var tcs))
+                        return;
+                    var body = ea.Body.ToArray();
+                    var response = Encoding.UTF8.GetString(body);
+                    tcs.TrySetResult(response);
+                };
 
-            channel.BasicConsume(consumer: consumer,
-                                 queue: replyQueueName,
-                                 autoAck: true);
+                channel.BasicConsume(consumer: consumer,
+                                     queue: replyQueueName,
+                                     autoAck: true);
+            }
+            catch(Exception ex) {
+                throw new BrokerException("The other service is down", ex);    
+            }
         }
 
         public async Task<string> CallAsync(object message, CancellationToken cancellationToken = default)
@@ -47,7 +53,7 @@ namespace Profile_service.message_broker
             var tcs = new TaskCompletionSource<string>();
             callbackMapper.TryAdd(correlationId, tcs);
 
-            Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(5));
+            Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(2));
 
             if (message is BrokerMessage brokerMessage)
             {
@@ -62,21 +68,19 @@ namespace Profile_service.message_broker
                         break;
                 }
             }
-           
+
 
             await Task.WhenAny(tcs.Task, timeoutTask);
 
             if (!tcs.Task.IsCompleted)
             {
-                throw new TimeoutException("Sending message timed out.");
+                throw new BrokerException("Sending message timed out.");
             }
 
-            // Remove the callback mapping
             callbackMapper.TryRemove(correlationId, out _);
 
             return await tcs.Task;
         }
-
 
         public void Dispose()
         {

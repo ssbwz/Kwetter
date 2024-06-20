@@ -8,6 +8,7 @@ using Models.Services_Interfaces;
 using Newtonsoft.Json;
 using Models.Identities;
 using Models.Broker;
+using Models.Exceptions;
 
 
 namespace Storage.Storages
@@ -53,7 +54,7 @@ namespace Storage.Storages
 
             if (retries == maxRetries)
             {
-                throw new Exception("Retry count exceeded");
+                throw new BrokerException("Retry count exceeded");
             }
         }
 

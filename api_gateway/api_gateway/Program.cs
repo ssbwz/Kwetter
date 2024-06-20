@@ -6,6 +6,7 @@ using System.Text;
 using Ocelot.Provider.Kubernetes;
 using Ocelot.Provider.Consul;
 using OpenTelemetry.Trace;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,7 @@ builder.Services.AddOcelot(builder.Configuration)
 .AddConsul()
 .AddKubernetes();
 
-
+builder.Services.AddHealthChecks();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigins",
@@ -72,6 +73,12 @@ app.UseCors("AllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRouting();
+app.MapHealthChecks("/health");
+app.UseEndpoints(e =>
+{
+    e.MapControllers();
+});
 
 await app.UseOcelot();
 

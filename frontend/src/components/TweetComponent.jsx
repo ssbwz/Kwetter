@@ -19,6 +19,7 @@ import {
 import { useState } from "react";
 import tweetService from '../services/TweetServer';
 import './style/tweetcomponent.css'
+import { useGlobalState, useGlobalStateUpdate } from '../GlobalState';
 
 function TweetComponent() {
 
@@ -26,6 +27,8 @@ function TweetComponent() {
     const [vTweetText, setVTweetText] = useState("What's happening?");
     const [isEighteenPlus, setIsEighteenPlus] = useState(false);
     const [basicModal, setBasicModal] = useState(false);
+    const isServiceAvailable = useGlobalState();
+    const setGlobalState = useGlobalStateUpdate();
 
     const toggleOpen = () => setBasicModal(!basicModal);
     async function shareTweet(e) {
@@ -38,7 +41,24 @@ function TweetComponent() {
             textContent: tweetText,
             isEighteenPlus: isEighteenPlus
         }
-        await tweetService.shareTweet(shareTweetRequest)
+        await tweetService.shareTweet(shareTweetRequest).catch((error) => {
+
+            if (error.response.status === 502) {
+                setGlobalState({
+                    identityService: isServiceAvailable.identityService,
+                    profileService: isServiceAvailable.profileService,
+                    tweetService: false,
+                    apiGatewayService: isServiceAvailable.apiGatewayService,
+                })
+            }
+            else
+                setGlobalState({
+                    identityService: isServiceAvailable.identityService,
+                    profileService: isServiceAvailable.profileService,
+                    tweetService: true,
+                    apiGatewayService: isServiceAvailable.apiGatewayService,
+                })
+        })
 
         setIsEighteenPlus(false)
         setTweetText('')
@@ -68,40 +88,47 @@ function TweetComponent() {
             </MDBModalDialog>
         </MDBModal>
     </>
-    return <>
-    <MDBCol size='xl' style={{padding: '0', margin: '10px 0 0 0'}} c>
-        <MDBCard className='box'>
-            <MDBCardBody>
-                <MDBRow >
-                    <MDBCol style={{ display: "flex", padding: '0 10px 10px 0' }} >
-                        <img
-                            src='https://kwetter001.blob.core.windows.net/profile/userPic.jpg'
-                            className='img-fluid rounded-circle'
-                            alt='User image'
-                            id='createTweetprofileImage'
-                        />
 
-                        <MDBInput label={vTweetText} id="tweetform" onChange={e => setTweetText(e.target.value)} value={tweetText} rows="{2}" maxLength={140} />
-                    </MDBCol>
-                </MDBRow >
-                <MDBRow >
-                    <MDBCol size="md toolbar" >
-                        <MDBIcon far icon="image" style={{ marginLeft: "3rem" }} className='icon' />
-                        <MDBIcon fas icon="poll" className='icon' />
-                        <MDBIcon far icon="smile" className='icon' />
-                        <MDBIcon style={{ cursor: "pointer" }} onClick={toggleOpen} fas icon="ellipsis-h" className='icon' />
-                        {options}
-                    </MDBCol>
-                    <MDBCol id="col-btn-tweet" size="auto" >
-                        <MDBBtn id='btn-tweet' onClick={e => shareTweet(e)} size='lg'>Tweet</MDBBtn>
-                    </MDBCol>
-                </MDBRow>
-            </MDBCardBody>
-        </MDBCard>
-        <hr style={{ border: "none", backgroundColor: "#333", height: "0.5px", color: "#d8dadb", margin: "0" }}></hr>
+    if (isServiceAvailable.tweetService === true) {
+        return <>
+            <MDBCol size='xl' style={{ padding: '0', margin: '10px 0 0 0' }} c>
+                <MDBCard className='box'>
+                    <MDBCardBody>
+                        <MDBRow >
+                            <MDBCol style={{ display: "flex", padding: '0 10px 10px 0' }} >
+                                <img
+                                    src='https://kwetter001.blob.core.windows.net/profile/userPic.jpg'
+                                    className='img-fluid rounded-circle'
+                                    alt='User image'
+                                    id='createTweetprofileImage'
+                                />
 
-        </MDBCol>
-    </>
+                                <MDBInput label={vTweetText} id="tweetform" onChange={e => setTweetText(e.target.value)} value={tweetText} rows="{2}" maxLength={140} />
+                            </MDBCol>
+                        </MDBRow >
+                        <MDBRow >
+                            <MDBCol size="md toolbar" >
+                                <MDBIcon far icon="image" style={{ marginLeft: "3rem" }} className='icon' />
+                                <MDBIcon fas icon="poll" className='icon' />
+                                <MDBIcon far icon="smile" className='icon' />
+                                <MDBIcon style={{ cursor: "pointer" }} onClick={toggleOpen} fas icon="ellipsis-h" className='icon' />
+                                {options}
+                            </MDBCol>
+                            <MDBCol id="col-btn-tweet" size="auto" >
+                                <MDBBtn id='btn-tweet' onClick={e => shareTweet(e)} size='lg'>Tweet</MDBBtn>
+                            </MDBCol>
+                        </MDBRow>
+                    </MDBCardBody>
+                </MDBCard>
+                <hr style={{ border: "none", backgroundColor: "#333", height: "0.5px", color: "#d8dadb", margin: "0" }}></hr>
+
+            </MDBCol>
+        </>
+    } else if (isServiceAvailable.tweetService === false) {
+        return <>
+            Sorry this feature is temporarily unavailable
+        </>
+    }
 }
 
 export default TweetComponent;

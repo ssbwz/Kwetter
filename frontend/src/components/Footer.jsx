@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     MDBFooter,
     MDBContainer,
@@ -17,6 +17,10 @@ import {
 import IdentitiesServer from "../services/IdentitiesServer";
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
+import TweetServer from '../services/TweetServer';
+import ProfilesServer from '../services/ProfilesServer';
+import { isApiGatewayHealthy } from '../services/Serverbase';
+import { useGlobalState } from '../GlobalState';
 
 
 export default function Footer() {
@@ -25,16 +29,28 @@ export default function Footer() {
 
     const [deleteMyAccountPopModal, setDeleteMyAccountPopModal] = useState(false);
     const [comingSoonPopModal, setComingSoonPopModal] = useState(false);
+    const [areNeededServersDown, setAreNeededServersDown] = useState(false);
 
 
     function deleteMyAccountShow() {
         setDeleteMyAccountPopModal(!deleteMyAccountPopModal)
     }
 
+    const isServiceAvailable = useGlobalState();
+
+
     async function deleteMyAccount() {
-        await IdentitiesServer.deleteCurrentIdentity()
-        removeCookie("token")
-        navigate("/login")
+        if (isServiceAvailable.tweetService &&
+            isServiceAvailable.profileService &&
+            isServiceAvailable.identityService &&
+            isServiceAvailable.apiGatewayService) {
+            await IdentitiesServer.deleteCurrentIdentity()
+            removeCookie("token")
+            window.location.replace("/login");
+        } else {
+            setAreNeededServersDown(true)
+            alert("Sorry this feature is not available at this momment")
+        }
     }
 
     function comingSoonShow() {
@@ -60,7 +76,11 @@ export default function Footer() {
                 </MDBModalContent>
             </MDBModalDialog>
         </MDBModal>
-
+    const deleteMyAccountButton = areNeededServersDown ? <>
+        <MDBBtn disabled>Delete Account</MDBBtn>
+    </> : <>
+        <MDBBtn onClick={deleteMyAccount}>Delete Account</MDBBtn>
+    </>
     const deleteMyAccountPopUp = <MDBModal open={deleteMyAccountPopModal} onClose={() => setDeleteMyAccountPopModal(false)} tabIndex='-1'>
         <MDBModalDialog size="xl">
             <MDBModalContent>
@@ -87,56 +107,54 @@ export default function Footer() {
 
                     <p>If you're sure you want to proceed with account deletion, please click the "Delete Account" button below. Otherwise, you can click "Cancel" to return to your account settings.</p>
 
-
                 </MDBModalBody>
 
                 <MDBModalFooter>
                     <MDBBtn color='secondary' onClick={deleteMyAccountShow}>
                         Cancel
                     </MDBBtn>
-                    <MDBBtn onClick={deleteMyAccount}>Delete Account</MDBBtn>
+                    {deleteMyAccountButton}
                 </MDBModalFooter>
             </MDBModalContent>
         </MDBModalDialog>
     </MDBModal>
     if (cookies.token) {
-        
         return (
             <>
-                                    {deleteMyAccountPopUp}
-            <MDBFooter bgColor='light' className=' fixed-bottom  text-center text-lg-start text-muted'>
-                <section className='d-flex justify-content-center justify-content-lg-between p-2 border-bottom'>
+                {deleteMyAccountPopUp}
+                <MDBFooter bgColor='light' className=' fixed-bottom  text-center text-lg-start text-muted'>
+                    <section className='d-flex justify-content-center justify-content-lg-between p-2 border-bottom'>
 
-                </section>
-                <section className=''>
-                    <MDBContainer className='text-center text-md-start mt-1'>
-                        <MDBRow className='mt-3'>
-                           
+                    </section>
+                    <section className=''>
+                        <MDBContainer className='text-center text-md-start mt-1'>
+                            <MDBRow className='mt-3'>
 
-                            <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-1'>
-                                <h6 className='text-uppercase fw-bold mb-2'>Profile management</h6>
-                                <p>
-                                    <a style={{ textDecoration: "underline", color: 'blue', cursor: "pointer" }} onClick={deleteMyAccountShow} className='text-reset'>
-                                        How to delete my account?
-                                    </a>
-                                </p>
 
-                            </MDBCol>
+                                <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-1'>
+                                    <h6 className='text-uppercase fw-bold mb-2'>Profile management</h6>
+                                    <p>
+                                        <a style={{ textDecoration: "underline", color: 'blue', cursor: "pointer" }} onClick={deleteMyAccountShow} className='text-reset'>
+                                            How to delete my account?
+                                        </a>
+                                    </p>
 
-                            <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>
+                                </MDBCol>
 
-                            </MDBCol>
-                        </MDBRow>
-                    </MDBContainer>
-                </section>
+                                <MDBCol md="4" lg="3" xl="3" className='mx-auto mb-md-0 mb-4'>
 
-                <div className='text-center p-2' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
-                    © 2024 Copyright:
-                    <a className='text-reset fw-bold' >
-                        Kwetter.com
-                    </a>
-                </div>
-            </MDBFooter>
+                                </MDBCol>
+                            </MDBRow>
+                        </MDBContainer>
+                    </section>
+
+                    <div className='text-center p-2' style={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
+                        © 2024 Copyright:
+                        <a className='text-reset fw-bold' >
+                            Kwetter.com
+                        </a>
+                    </div>
+                </MDBFooter>
             </>
 
         );
